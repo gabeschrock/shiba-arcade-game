@@ -39,11 +39,12 @@ expand_mode = 1
 stretch_mode = 1
 
 [node name="AbilityLabel" type="Label" parent="GUI"]
+visible = false
 offset_top = 171.0
 offset_right = 320.0
 offset_bottom = 179.0
 theme = ExtResource("4_dqkch")
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-text = "Ability: Double Jump"
+text = "Ability: "
 horizontal_alignment = 1
 uppercase = true
