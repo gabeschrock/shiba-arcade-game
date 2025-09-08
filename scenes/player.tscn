@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://dspm7rpnnutbt"]
+
+[ext_resource type="Script" uid="uid://dco3eaasuxlsr" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Texture2D" uid="uid://brlpgdq4sccvi" path="res://icon.svg" id="2_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://c4ykvm8765aos" path="res://assets/heart.png" id="3_qhqgy"]
+[ext_resource type="Theme" uid="uid://c06vrlubyc4or" path="res://resources/theme.tres" id="4_dqkch"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g2els"]
+size = Vector2(14, 24)
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 2
+script = ExtResource("1_g2els")
+
+[node name="Icon" type="Sprite2D" parent="."]
+scale = Vector2(0.125, 0.188)
+texture = ExtResource("2_qhqgy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_g2els")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1, 0)
+position_smoothing_enabled = true
+
+[node name="JumpTimer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="Hearts" type="TextureRect" parent="GUI"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 10.0
+offset_bottom = 9.0
+texture = ExtResource("3_qhqgy")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="AbilityLabel" type="Label" parent="GUI"]
+offset_top = 171.0
+offset_right = 320.0
+offset_bottom = 179.0
+theme = ExtResource("4_dqkch")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+text = "Ability: Double Jump"
+horizontal_alignment = 1
+uppercase = true

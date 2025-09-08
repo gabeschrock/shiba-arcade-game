@@ -1,0 +1,182 @@
+[gd_scene load_steps=24 format=3 uid="uid://cfvhkcjaygb33"]
+
+[ext_resource type="Texture2D" uid="uid://bydix6bv4j6ca" path="res://assets/crumbling-tile.png" id="1_2bpm0"]
+[ext_resource type="Script" uid="uid://bmjftck8my2fl" path="res://scripts/crumbling_tile.gd" id="1_vwdrx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwdrx"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xjd7f"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4anwj"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11vcg"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d815a"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eveho"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1f38"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11ofx"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ljtx8"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hghit"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qbbho"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6lord"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cg3x6"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mgb14"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_38tcl"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_otnk7"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8m6o"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k5qow"]
+atlas = ExtResource("1_2bpm0")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cg3x6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwdrx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xjd7f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4anwj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_11vcg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d815a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eveho")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1f38")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_11ofx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ljtx8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hghit")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qbbho")
+}],
+"loop": true,
+"name": &"crumble",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6lord")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cg3x6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mgb14")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_38tcl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_otnk7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o8m6o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k5qow")
+}],
+"loop": true,
+"name": &"respawn",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mgb14"]
+size = Vector2(16, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xjd7f"]
+size = Vector2(16.5, 2)
+
+[node name="CrumblingTile" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_vwdrx")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_cg3x6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1.5)
+shape = SubResource("RectangleShape2D_mgb14")
+
+[node name="PlayerArea" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea"]
+position = Vector2(-0.25, -8)
+shape = SubResource("RectangleShape2D_xjd7f")
+
+[node name="RespawnTimer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_sprite_animation_finished"]
+[connection signal="animation_looped" from="AnimatedSprite2D" to="." method="_on_sprite_animation_looped"]
+[connection signal="body_entered" from="PlayerArea" to="." method="_on_player_area_body_entered"]
+[connection signal="timeout" from="RespawnTimer" to="." method="_on_respawn_timer_timeout"]
