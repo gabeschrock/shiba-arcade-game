@@ -7,10 +7,11 @@ enum Ability {
 }
 
 const Checkpoint = preload("res://scripts/checkpoint.gd")
+const FlashManager = preload("res://scripts/flash_manager.gd")
 
-const SPEED = 100.0
+const SPEED = 110.0
 const DECELERATION = 3000.0
-const JUMP_VELOCITY = 210.0
+const JUMP_VELOCITY = 200.0
 const MAX_FALL_SPEED = 40 * 60
 const FLY_SPEED = 200.0
 const HEART_WIDTH = 9
@@ -26,6 +27,7 @@ const NICE_NAMES = {
 var respawn_pos := position
 var dashes := 0
 var air_jumps := 0
+var in_danger := false
 var ability := Ability.NONE:
 	set(value):
 		if ability == value:
@@ -35,6 +37,7 @@ var ability := Ability.NONE:
 		if not is_none:
 			ability_label.text = "Ability: " + NICE_NAMES[value]
 		ability_label.visible = not is_none
+		ability_flash.flash()
 var checkpoint: Checkpoint:
 	set(value):
 		if checkpoint == value:
@@ -50,14 +53,16 @@ var health: int:
 		if value < health and not value & 1:
 			position = respawn_pos
 			velocity = Vector2.ZERO
+		if value < health:
+			flash.flash()
 		health = value
 		var tween := get_tree().create_tween()
 		tween.set_trans(Tween.TRANS_SINE)
 		tween.tween_property(
 			hearts,
 			"size:x",
-			(value >> 1) * HEART_WIDTH + HALF_HEART * (value & 1),
-			0.2
+			(value >> 1) * HEART_WIDTH - 1 + (HALF_HEART + 1) * (value & 1),
+			0.3
 		)
 		if value <= 0:
 			get_tree().quit()
@@ -71,7 +76,11 @@ var movement: Variant:
 @onready var jump_timer: Timer = $JumpTimer
 @onready var hearts: TextureRect = $GUI/Hearts
 @onready var shape: CollisionShape2D = $CollisionShape2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ability_label: Label = $GUI/AbilityLabel
+@onready var flash: FlashManager = $Flash
+@onready var ability_flash: FlashManager = $AbilityFlash
+@onready var danger_area: Area2D = $DangerArea
 
 func _ready() -> void:
 	health = MAX_HEALTH
@@ -90,7 +99,19 @@ func _physics_process(delta: float) -> void:
 			health = MAX_HEALTH
 			return
 		elif Input.is_action_just_released("player_fly"):
+			print(-position.y)
 			velocity = Vector2.ZERO
+
+	var was_in_danger := in_danger
+	in_danger = len(danger_area.get_overlapping_bodies()) > 0
+	if in_danger and not was_in_danger:
+		health -= 1
+
+	var height := -position.y
+	if height > 530:
+		ability = Ability.DOUBLE_JUMP
+	elif height < 510:
+		ability = Ability.NONE
 
 	var direction := Input.get_axis("player_left", "player_right")
 	match ability:
@@ -122,11 +143,18 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
 		velocity.y = min(velocity.y, -JUMP_VELOCITY)
 		jump_timer.stop()
-
 	
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * SPEED, DECELERATION * delta)
+		sprite.flip_h = direction < 0
 	else:
 		velocity.x = move_toward(velocity.x, 0, DECELERATION * delta)
+	
+	if is_on_floor():
+		sprite.play("run" if direction else "default")
+	else:
+		var anim := "jump" if velocity.y < 0 else "fall"
+		if sprite.animation != anim:
+			sprite.play(anim)
 
 	move_and_slide()

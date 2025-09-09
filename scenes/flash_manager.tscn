@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://boe00b3x4llvt"]
+
+[ext_resource type="Script" uid="uid://dw0ssl07itwlw" path="res://scripts/flash_manager.gd" id="1_e8mlf"]
+
+[node name="FlashManager" type="Node"]
+script = ExtResource("1_e8mlf")
+
+[node name="FlashTimer" type="Timer" parent="."]
+
+[node name="FlashingTimer" type="Timer" parent="."]
+
+[connection signal="timeout" from="FlashTimer" to="." method="_on_flash_timer_timeout"]
+[connection signal="timeout" from="FlashingTimer" to="." method="_on_flashing_timer_timeout"]
