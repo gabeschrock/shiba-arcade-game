@@ -1,7 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://cfvhkcjaygb33"]
+[gd_scene load_steps=26 format=3 uid="uid://cfvhkcjaygb33"]
 
-[ext_resource type="Texture2D" uid="uid://bydix6bv4j6ca" path="res://assets/crumbling-tile.png" id="1_2bpm0"]
+[ext_resource type="Texture2D" uid="uid://bydix6bv4j6ca" path="res://assets/crumbling-tile/crumbling-tile.png" id="1_2bpm0"]
 [ext_resource type="Script" uid="uid://bmjftck8my2fl" path="res://scripts/crumbling_tile.gd" id="1_vwdrx"]
+[ext_resource type="AudioStream" uid="uid://i301eqwac13b" path="res://assets/crumbling-tile/crumble.wav" id="3_xjd7f"]
+[ext_resource type="AudioStream" uid="uid://dijb1d1tj0h0v" path="res://assets/crumbling-tile/respawn.wav" id="4_4anwj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vwdrx"]
 atlas = ExtResource("1_2bpm0")
@@ -151,7 +153,7 @@ animations = [{
 size = Vector2(16, 13)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xjd7f"]
-size = Vector2(16.5, 2)
+size = Vector2(16, 2)
 
 [node name="CrumblingTile" type="StaticBody2D"]
 collision_layer = 2
@@ -160,6 +162,7 @@ script = ExtResource("1_vwdrx")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_cg3x6")
+animation = &"crumble"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -1.5)
@@ -169,12 +172,23 @@ shape = SubResource("RectangleShape2D_mgb14")
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea"]
-position = Vector2(-0.25, -8)
+position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_xjd7f")
 
 [node name="RespawnTimer" type="Timer" parent="."]
 wait_time = 2.5
 one_shot = true
+
+[node name="CrumbleSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_xjd7f")
+volume_db = -10.0
+pitch_scale = 0.5
+
+[node name="RespawnSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_4anwj")
+volume_db = -10.0
+pitch_scale = 0.5
+attenuation = 20.0
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_sprite_animation_finished"]
 [connection signal="animation_looped" from="AnimatedSprite2D" to="." method="_on_sprite_animation_looped"]

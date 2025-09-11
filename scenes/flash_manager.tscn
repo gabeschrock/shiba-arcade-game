@@ -8,6 +8,7 @@ script = ExtResource("1_e8mlf")
 [node name="FlashTimer" type="Timer" parent="."]
 
 [node name="FlashingTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="timeout" from="FlashTimer" to="." method="_on_flash_timer_timeout"]
 [connection signal="timeout" from="FlashingTimer" to="." method="_on_flashing_timer_timeout"]

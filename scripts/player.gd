@@ -48,13 +48,19 @@ var checkpoint: Checkpoint:
 		checkpoint = value
 		health = MAX_HEALTH
 		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
+		checkpoint_sound.play()
 var health: int:
 	set(value):
+		if flash.flashing or health == value:
+			return
+		if value <= 0:
+			get_tree().quit()
 		if value < health and not value & 1:
 			position = respawn_pos
 			velocity = Vector2.ZERO
 		if value < health:
 			flash.flash()
+			hurt_sound.play()
 		health = value
 		var tween := get_tree().create_tween()
 		tween.set_trans(Tween.TRANS_SINE)
@@ -64,8 +70,7 @@ var health: int:
 			(value >> 1) * HEART_WIDTH - 1 + (HALF_HEART + 1) * (value & 1),
 			0.3
 		)
-		if value <= 0:
-			get_tree().quit()
+		
 var movement: Variant:
 	set(value):
 		if movement:
@@ -81,6 +86,9 @@ var movement: Variant:
 @onready var flash: FlashManager = $Flash
 @onready var ability_flash: FlashManager = $AbilityFlash
 @onready var danger_area: Area2D = $DangerArea
+@onready var jump_sound: AudioStreamPlayer = $JumpSound
+@onready var hurt_sound: AudioStreamPlayer = $HurtSound
+@onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
 
 func _ready() -> void:
 	health = MAX_HEALTH
@@ -89,8 +97,7 @@ func fly(delta: float) -> void:
 	position += Input.get_vector("player_left", "player_right", "player_up", "player_down") * FLY_SPEED * delta
 
 func die():
-	@warning_ignore("integer_division")
-	health = (health - 1) / 2 * 2
+	health = (health - 1) >> 1 << 1
 
 func _physics_process(delta: float) -> void:
 	if OS.is_debug_build():
@@ -121,6 +128,7 @@ func _physics_process(delta: float) -> void:
 			if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
 				air_jumps -= 1
 				velocity.y = min(velocity.y, -JUMP_VELOCITY)
+				jump_sound.play()
 		Ability.DASH:
 			if dashes and direction and Input.is_action_just_pressed("player_action"):
 				dashes -= 1
@@ -143,6 +151,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
 		velocity.y = min(velocity.y, -JUMP_VELOCITY)
 		jump_timer.stop()
+		jump_sound.play()
 	
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * SPEED, DECELERATION * delta)

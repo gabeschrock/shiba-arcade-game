@@ -8,6 +8,9 @@ extends Node
 @onready var flashing_timer: Timer = $FlashingTimer
 
 var keep_target := true
+var flashing: bool:
+	get():
+		return flashing_timer.time_left > 0
 
 func _ready() -> void:
 	flash_timer.wait_time = flash_time

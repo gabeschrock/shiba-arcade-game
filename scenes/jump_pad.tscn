@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://5rhu84tstjai"]
+[gd_scene load_steps=6 format=3 uid="uid://5rhu84tstjai"]
 
-[ext_resource type="Texture2D" uid="uid://mtreogupq20s" path="res://assets/tiles.png" id="1_7e8al"]
+[ext_resource type="Texture2D" uid="uid://cqps5fjllebly" path="res://assets/tiles.png" id="1_7e8al"]
 [ext_resource type="Script" uid="uid://dd81tv7ekgjcx" path="res://scripts/jump_pad.gd" id="1_kabc6"]
+[ext_resource type="AudioStream" uid="uid://bqd0p86ryotd6" path="res://assets/jump.wav" id="3_ityjr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kabc6"]
 atlas = ExtResource("1_7e8al")
@@ -27,5 +28,10 @@ collision_mask = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, 8.5)
 shape = SubResource("RectangleShape2D_kabc6")
+
+[node name="Sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ityjr")
+volume_db = -5.0
+pitch_scale = 0.8
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

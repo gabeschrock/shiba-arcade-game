@@ -18,6 +18,8 @@ var state := TileState.IDLE:
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var respawn_timer: Timer = $RespawnTimer
 @onready var player_area: Area2D = $PlayerArea
+@onready var crumble_sound: AudioStreamPlayer2D = $CrumbleSound
+@onready var respawn_sound: AudioStreamPlayer2D = $RespawnSound
 
 func animate() -> void:
 	sprite.play(animations[state])
@@ -26,6 +28,8 @@ func _process(_delta: float) -> void:
 	animate()
 
 func _on_player_area_body_entered(_body: Node2D) -> void:
+	if state != TileState.CRUMBLING:
+		crumble_sound.play()
 	state = TileState.CRUMBLING
 
 func _on_sprite_animation_looped() -> void:
@@ -43,3 +47,4 @@ func _on_respawn_timer_timeout() -> void:
 	state = TileState.RESPAWNING
 	set_deferred("visible", true)
 	collision_shape.disabled = false
+	respawn_sound.play(0.14)

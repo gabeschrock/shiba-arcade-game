@@ -1,10 +1,13 @@
-[gd_scene load_steps=24 format=3 uid="uid://dspm7rpnnutbt"]
+[gd_scene load_steps=27 format=3 uid="uid://dspm7rpnnutbt"]
 
 [ext_resource type="Script" uid="uid://dco3eaasuxlsr" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://c4ykvm8765aos" path="res://assets/heart.png" id="3_qhqgy"]
 [ext_resource type="Theme" uid="uid://c06vrlubyc4or" path="res://resources/theme.tres" id="4_dqkch"]
 [ext_resource type="PackedScene" uid="uid://boe00b3x4llvt" path="res://scenes/flash_manager.tscn" id="5_qlg0r"]
+[ext_resource type="AudioStream" uid="uid://bqd0p86ryotd6" path="res://assets/jump.wav" id="6_fjrip"]
 [ext_resource type="Texture2D" uid="uid://dimqtyij7vd47" path="res://assets/player.png" id="6_tuyoq"]
+[ext_resource type="AudioStream" uid="uid://dn3se07n8q5s4" path="res://assets/hurt.wav" id="7_fjrip"]
+[ext_resource type="AudioStream" uid="uid://bm14bxg7lpn0o" path="res://assets/checkpoint.wav" id="8_smehm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g2els"]
 size = Vector2(10, 14)
@@ -194,7 +197,17 @@ sprite_frames = SubResource("SpriteFrames_60mlk")
 animation = &"fall"
 
 [node name="Flash" parent="." instance=ExtResource("5_qlg0r")]
-flashing_time = 0.5
+flashing_time = 0.6
 
 [node name="AbilityFlash" parent="." node_paths=PackedStringArray("target") instance=ExtResource("5_qlg0r")]
 target = NodePath("../GUI/AbilityLabel")
+
+[node name="JumpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_fjrip")
+volume_db = -8.0
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_fjrip")
+
+[node name="CheckpointSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_smehm")
