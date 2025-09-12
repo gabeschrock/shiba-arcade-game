@@ -12,6 +12,7 @@ const FlashManager = preload("res://scripts/flash_manager.gd")
 const SPEED = 110.0
 const DECELERATION = 3000.0
 const JUMP_VELOCITY = 200.0
+const JUMP_CUTOFF = 0.5
 const MAX_FALL_SPEED = 40 * 60
 const FLY_SPEED = 200.0
 const HEART_WIDTH = 9
@@ -42,8 +43,6 @@ var checkpoint: Checkpoint:
 	set(value):
 		if checkpoint == value:
 			return
-		if checkpoint:
-			checkpoint.active = false
 		value.active = true
 		checkpoint = value
 		health = MAX_HEALTH
@@ -51,10 +50,13 @@ var checkpoint: Checkpoint:
 		checkpoint_sound.play()
 var health: int:
 	set(value):
-		if flash.flashing or health == value:
+		if health == value:
+			return
+		if value < health and flash.flashing:
 			return
 		if value <= 0:
-			get_tree().quit()
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			return
 		if value < health and not value & 1:
 			position = respawn_pos
 			velocity = Vector2.ZERO
@@ -100,7 +102,7 @@ func die():
 	health = (health - 1) >> 1 << 1
 
 func _physics_process(delta: float) -> void:
-	if OS.is_debug_build():
+	if OS.is_debug_build() or OS.has_feature("playtesting"):
 		if Input.is_action_pressed("player_fly"):
 			fly(delta)
 			health = MAX_HEALTH
@@ -129,6 +131,8 @@ func _physics_process(delta: float) -> void:
 				air_jumps -= 1
 				velocity.y = min(velocity.y, -JUMP_VELOCITY)
 				jump_sound.play()
+			if Input.is_action_just_released("player_jump") and velocity.y < 0:
+				velocity.y *= JUMP_CUTOFF
 		Ability.DASH:
 			if dashes and direction and Input.is_action_just_pressed("player_action"):
 				dashes -= 1
@@ -145,13 +149,15 @@ func _physics_process(delta: float) -> void:
 	
 	velocity.y = minf(velocity.y, MAX_FALL_SPEED)
 
-	if position.y > 200:
+	if position.y > 200 or Input.is_action_just_pressed("player_restart"):
 		die()
 
 	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
 		velocity.y = min(velocity.y, -JUMP_VELOCITY)
 		jump_timer.stop()
 		jump_sound.play()
+	if Input.is_action_just_released("player_jump") and velocity.y < 0:
+		velocity.y *= JUMP_CUTOFF
 	
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * SPEED, DECELERATION * delta)
@@ -166,4 +172,6 @@ func _physics_process(delta: float) -> void:
 		if sprite.animation != anim:
 			sprite.play(anim)
 
+	if not is_inside_tree():
+		return
 	move_and_slide()
