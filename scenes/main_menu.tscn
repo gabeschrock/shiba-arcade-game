@@ -22,10 +22,17 @@ offset_left = 100.0
 offset_top = 100.0
 offset_right = 220.0
 offset_bottom = 115.0
+theme = ExtResource("1_l6cm7")
 
 [node name="PlayButton" type="Button" parent="Buttons"]
 layout_mode = 2
-theme = ExtResource("1_l6cm7")
 text = "Play"
+flat = true
+
+[node name="TimerButton" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Show Timer"
+flat = true
 
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Buttons/TimerButton" to="." method="_on_timer_button_pressed"]

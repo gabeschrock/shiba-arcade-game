@@ -41,10 +41,12 @@ var ability := Ability.NONE:
 		ability_flash.flash()
 var checkpoint: Checkpoint:
 	set(value):
-		if checkpoint == value:
+		if value.active:
 			return
 		value.active = true
 		checkpoint = value
+		if Settings.show_timer:
+			value.set_time(self)
 		health = MAX_HEALTH
 		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
 		checkpoint_sound.play()
@@ -91,15 +93,39 @@ var movement: Variant:
 @onready var jump_sound: AudioStreamPlayer = $JumpSound
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
 @onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
+@onready var timer: Label = $GUI/Timer
+@onready var start := Time.get_unix_time_from_system()
 
 func _ready() -> void:
 	health = MAX_HEALTH
+	timer.visible = Settings.show_timer
 
 func fly(delta: float) -> void:
 	position += Input.get_vector("player_left", "player_right", "player_up", "player_down") * FLY_SPEED * delta
 
 func die():
 	health = (health - 1) >> 1 << 1
+
+func get_time() -> String:
+	var time := Time.get_unix_time_from_system() - start
+	var hours := floori(time / 3600)
+	var minutes := floori(time / 60) % 60
+	var seconds := fmod(time, 60)
+	var text := "%d:%05.2f" % [minutes, seconds]
+	if hours:
+		text = str(hours) + ":" + text.pad_zeros(8)
+	return text
+	
+func _process(delta: float) -> void:
+	timer.text = get_time()
+	if Input.is_action_pressed("exit"):
+		get_tree().change_scene_to_file("res://scenes/main.tscn")
+
+func jump():
+	if velocity.y > -JUMP_VELOCITY:
+		velocity.y = -JUMP_VELOCITY
+		jump_timer.stop()
+		jump_sound.play()
 
 func _physics_process(delta: float) -> void:
 	if OS.is_debug_build() or OS.has_feature("playtesting"):
@@ -108,7 +134,6 @@ func _physics_process(delta: float) -> void:
 			health = MAX_HEALTH
 			return
 		elif Input.is_action_just_released("player_fly"):
-			print(-position.y)
 			velocity = Vector2.ZERO
 
 	var was_in_danger := in_danger
@@ -129,8 +154,7 @@ func _physics_process(delta: float) -> void:
 		Ability.DOUBLE_JUMP:
 			if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
 				air_jumps -= 1
-				velocity.y = min(velocity.y, -JUMP_VELOCITY)
-				jump_sound.play()
+				jump()
 			if Input.is_action_just_released("player_jump") and velocity.y < 0:
 				velocity.y *= JUMP_CUTOFF
 		Ability.DASH:
@@ -153,9 +177,7 @@ func _physics_process(delta: float) -> void:
 		die()
 
 	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
-		velocity.y = min(velocity.y, -JUMP_VELOCITY)
-		jump_timer.stop()
-		jump_sound.play()
+		jump()
 	if Input.is_action_just_released("player_jump") and velocity.y < 0:
 		velocity.y *= JUMP_CUTOFF
 	

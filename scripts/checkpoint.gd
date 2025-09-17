@@ -3,6 +3,11 @@ extends Area2D
 const Player = preload("res://scripts/player.gd")
 var active: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var time: Label = $Time
+
+func set_time(player: Player):
+	time.text = player.get_time()
+	time.visible = true
 
 func _process(_delta: float) -> void:
 	sprite.play("active" if active else "default")
