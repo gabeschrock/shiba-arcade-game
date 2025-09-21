@@ -6,6 +6,11 @@ var hitboxes: Array[Node2D] = []
 @onready var player_path: Node2D = $PlayerPath
 @onready var hitbox_node: Node2D = $PlayerPath/Hitbox
 @onready var last_point := player.position
+@onready var playtest_label: Label = $PlaytestLabel
+
+func _ready() -> void:
+	if Settings.is_playtest:
+		playtest_label.visible = true
 
 func _process(_delta: float) -> void:
 	return

@@ -12,10 +12,10 @@ const COLORS: Array[Color] = [
 @onready var sprite: Sprite2D = $Sprite2D
 var image := Settings.background
 
-func update_texture():
+func update_texture() -> void:
 	(sprite.texture as ImageTexture).update(image)
 
-func random_color():
+func random_color() -> Color:
 	return COLORS[randi_range(0, len(COLORS) - 1)] / 2
 
 func _ready() -> void:

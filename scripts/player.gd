@@ -28,7 +28,9 @@ const NICE_NAMES = {
 var respawn_pos := position
 var dashes := 0
 var air_jumps := 0
+var jumping := false
 var in_danger := false
+var time := 0.0
 var ability := Ability.NONE:
 	set(value):
 		if ability == value:
@@ -45,36 +47,16 @@ var checkpoint: Checkpoint:
 			return
 		value.active = true
 		checkpoint = value
-		if Settings.show_timer:
-			value.set_time(self)
+		value.set_time(self)
 		health = MAX_HEALTH
 		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
 		checkpoint_sound.play()
 var health: int:
+	get():
+		return _health
 	set(value):
-		if health == value:
-			return
-		if value < health and flash.flashing:
-			return
-		if value <= 0:
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-			return
-		if value < health and not value & 1:
-			position = respawn_pos
-			velocity = Vector2.ZERO
-		if value < health:
-			flash.flash()
-			hurt_sound.play()
-		health = value
-		var tween := get_tree().create_tween()
-		tween.set_trans(Tween.TRANS_SINE)
-		tween.tween_property(
-			hearts,
-			"size:x",
-			(value >> 1) * HEART_WIDTH - 1 + (HALF_HEART + 1) * (value & 1),
-			0.3
-		)
-		
+		set_health(value)
+var _health: int
 var movement: Variant:
 	set(value):
 		if movement:
@@ -94,20 +76,53 @@ var movement: Variant:
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
 @onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
 @onready var timer: Label = $GUI/Timer
-@onready var start := Time.get_unix_time_from_system()
+@onready var pause_menu: Control = $GUI/PauseMenu
+@onready var camera: Camera2D = $Camera2D
 
 func _ready() -> void:
 	health = MAX_HEALTH
 	timer.visible = Settings.show_timer
+	Settings.show_timer_changed.connect(_on_show_timer_changed)
+
+func _on_show_timer_changed(value: bool) -> void:
+	timer.visible = value
+
+func pause() -> void:
+	pause_menu.visible = true
+	get_tree().set_deferred("paused", true)
+	AudioServer.set_bus_effect_enabled(0, 0, true)
 
 func fly(delta: float) -> void:
 	position += Input.get_vector("player_left", "player_right", "player_up", "player_down") * FLY_SPEED * delta
 
-func die():
-	health = (health - 1) >> 1 << 1
+func die(force := false) -> void:
+	set_health((health - 1) >> 1 << 1, force)
+
+func set_health(value: int, force := false) -> void:
+	if _health == value:
+		return
+	if value < _health and flash.flashing and not force:
+		return
+	if value <= 0:
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		return
+	if value < _health:
+		if not value & 1:
+			position = respawn_pos
+			velocity = Vector2.ZERO
+		flash.flash()
+		hurt_sound.play()
+	_health = value
+	var tween := get_tree().create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.tween_property(
+		hearts,
+		"size:x",
+		(value >> 1) * HEART_WIDTH - 1 + (HALF_HEART + 1) * (value & 1),
+		0.3
+	)
 
 func get_time() -> String:
-	var time := Time.get_unix_time_from_system() - start
 	var hours := floori(time / 3600)
 	var minutes := floori(time / 60) % 60
 	var seconds := fmod(time, 60)
@@ -117,18 +132,27 @@ func get_time() -> String:
 	return text
 	
 func _process(delta: float) -> void:
+	time += delta
 	timer.text = get_time()
-	if Input.is_action_pressed("exit"):
-		get_tree().change_scene_to_file("res://scenes/main.tscn")
+	if Input.is_action_just_pressed("exit"):
+		pause()
 
-func jump():
+func jump() -> void:
 	if velocity.y > -JUMP_VELOCITY:
 		velocity.y = -JUMP_VELOCITY
-		jump_timer.stop()
-		jump_sound.play()
+		await get_tree().physics_frame
+		if velocity.y >= -JUMP_VELOCITY:
+			jumping = true
+			jump_timer.stop()
+			jump_sound.play()
 
-func _physics_process(delta: float) -> void:
-	if OS.is_debug_build() or OS.has_feature("playtesting"):
+func _physics_process(delta: float):
+	var camera_rect := camera.get_viewport_rect()
+	camera_rect.position = camera.get_screen_center_position() - camera_rect.size / 2
+	if flash.flashing and not camera_rect.has_point(global_position):
+		flash.flash()
+		return
+	if Settings.is_playtest:
 		if Input.is_action_pressed("player_fly"):
 			fly(delta)
 			health = MAX_HEALTH
@@ -148,6 +172,8 @@ func _physics_process(delta: float) -> void:
 		ability = Ability.NONE
 
 	var direction := Input.get_axis("player_left", "player_right")
+	if velocity.y > 0:
+		jumping = false
 	match ability:
 		Ability.NONE:
 			pass
@@ -155,7 +181,7 @@ func _physics_process(delta: float) -> void:
 			if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
 				air_jumps -= 1
 				jump()
-			if Input.is_action_just_released("player_jump") and velocity.y < 0:
+			if Input.is_action_just_released("player_jump") and jumping:
 				velocity.y *= JUMP_CUTOFF
 		Ability.DASH:
 			if dashes and direction and Input.is_action_just_pressed("player_action"):
@@ -174,11 +200,11 @@ func _physics_process(delta: float) -> void:
 	velocity.y = minf(velocity.y, MAX_FALL_SPEED)
 
 	if position.y > 200 or Input.is_action_just_pressed("player_restart"):
-		die()
+		die(true)
 
 	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
 		jump()
-	if Input.is_action_just_released("player_jump") and velocity.y < 0:
+	if Input.is_action_just_released("player_jump") and jumping:
 		velocity.y *= JUMP_CUTOFF
 	
 	if direction:

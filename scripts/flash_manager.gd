@@ -21,7 +21,7 @@ func _enter_tree() -> void:
 		keep_target = false
 		target = get_parent() as Node2D
 
-func flash():
+func flash() -> void:
 	if target.visible:
 		flash_timer.start()
 		flashing_timer.start()

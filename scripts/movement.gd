@@ -8,7 +8,7 @@ var player: Player:
 			player = get_parent() as Player
 		return player
 
-func end():
+func end() -> void:
 	if not is_inside_tree():
 		return
 	player.movement = null
@@ -21,7 +21,7 @@ class Dash extends Movement:
 	func _init(direction: Vector2) -> void:
 		velocity = direction * SPEED
 	
-	func end():
+	func end() -> void:
 		player.velocity = velocity
 		super()
 	
