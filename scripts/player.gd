@@ -31,6 +31,7 @@ var air_jumps := 0
 var jumping := false
 var in_danger := false
 var time := 0.0
+var timing := false
 var ability := Ability.NONE:
 	set(value):
 		if ability == value:
@@ -75,6 +76,7 @@ var movement: Variant:
 @onready var jump_sound: AudioStreamPlayer = $JumpSound
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
 @onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
+@onready var dash_sound: AudioStreamPlayer = $DashSound
 @onready var timer: Label = $GUI/Timer
 @onready var pause_menu: Control = $GUI/PauseMenu
 @onready var camera: Camera2D = $Camera2D
@@ -132,10 +134,18 @@ func get_time() -> String:
 	return text
 	
 func _process(delta: float) -> void:
-	time += delta
-	timer.text = get_time()
+	if timing:
+		time += delta
+		timer.text = get_time()
 	if Input.is_action_just_pressed("exit"):
 		pause()
+	if Input.is_action_just_pressed("screenshot") and OS.is_debug_build():
+		await RenderingServer.frame_post_draw
+		var screen := get_viewport().get_texture().get_image()
+		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
+		var path = "user://screenshot_%s.png" % timestamp
+		screen.save_png(path)
+		print("Screenshot saved as ", ProjectSettings.globalize_path(path))
 
 func jump() -> void:
 	if velocity.y > -JUMP_VELOCITY:
@@ -153,6 +163,8 @@ func _physics_process(delta: float):
 		flash.flash()
 		return
 	if Settings.is_playtest:
+		if OS.is_debug_build() and Input.is_action_just_pressed("player_fly"):
+			print(-position.y)
 		if Input.is_action_pressed("player_fly"):
 			fly(delta)
 			health = MAX_HEALTH
@@ -166,7 +178,9 @@ func _physics_process(delta: float):
 		health -= 1
 
 	var height := -position.y
-	if height > 530:
+	if height > 820:
+		ability = Ability.DASH
+	elif 530 < height and height < 780:
 		ability = Ability.DOUBLE_JUMP
 	elif height < 510:
 		ability = Ability.NONE
@@ -187,6 +201,7 @@ func _physics_process(delta: float):
 			if dashes and direction and Input.is_action_just_pressed("player_action"):
 				dashes -= 1
 				movement = Movement.Dash.new(Vector2(signf(direction), 0))
+				dash_sound.play()
 	if movement:
 		return
 	
@@ -208,6 +223,7 @@ func _physics_process(delta: float):
 		velocity.y *= JUMP_CUTOFF
 	
 	if direction:
+		timing = true
 		velocity.x = move_toward(velocity.x, direction * SPEED, DECELERATION * delta)
 		sprite.flip_h = direction < 0
 	else:

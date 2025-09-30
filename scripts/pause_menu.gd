@@ -1,9 +1,11 @@
 extends Control
 
+@onready var resume_button: Button = $Buttons/ResumeButton
 @onready var timer_button: Button = $Buttons/TimerButton
 
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
+	_on_show_timer_changed(Settings.show_timer)
 
 func resume() -> void:
 	visible = false
@@ -13,6 +15,10 @@ func resume() -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("exit"):
 		resume()
+
+func _on_restart_button_pressed() -> void:
+	resume()
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_show_timer_changed(value: bool) -> void:
 	if value:
@@ -26,3 +32,7 @@ func _on_exit_button_pressed() -> void:
 
 func _on_timer_button_pressed() -> void:
 	Settings.show_timer = not Settings.show_timer
+
+func _on_visibility_changed() -> void:
+	if visible:
+		resume_button.grab_focus.call_deferred()

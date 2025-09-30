@@ -237,6 +237,11 @@ layout_mode = 2
 text = "Resume"
 flat = true
 
+[node name="RestartButton" type="Button" parent="GUI/PauseMenu/Buttons"]
+layout_mode = 2
+text = "Restart"
+flat = true
+
 [node name="ExitButton" type="Button" parent="GUI/PauseMenu/Buttons"]
 layout_mode = 2
 text = "Exit"
@@ -275,12 +280,18 @@ stream = ExtResource("7_fjrip")
 [node name="CheckpointSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_smehm")
 
+[node name="DashSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_fjrip")
+pitch_scale = 1.25
+
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("11_d2wvv")
 autoplay = true
 
 [connection signal="timeout" from="Background/MutateTimer" to="Background" method="_on_mutate_timer_timeout"]
+[connection signal="visibility_changed" from="GUI/PauseMenu" to="GUI/PauseMenu" method="_on_visibility_changed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/ResumeButton" to="GUI/PauseMenu" method="resume"]
+[connection signal="pressed" from="GUI/PauseMenu/Buttons/RestartButton" to="GUI/PauseMenu" method="_on_restart_button_pressed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/ExitButton" to="GUI/PauseMenu" method="_on_exit_button_pressed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/TimerButton" to="GUI/PauseMenu" method="_on_timer_button_pressed"]

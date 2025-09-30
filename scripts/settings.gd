@@ -13,4 +13,7 @@ var show_timer := false:
 var background := Image.create(BG_WIDTH, BG_HEIGHT, false, Image.FORMAT_RGBA4444)
 
 func _ready() -> void:
+	reset_bg()
+
+func reset_bg() -> void:
 	background.fill(Color.BLACK)

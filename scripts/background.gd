@@ -19,6 +19,7 @@ func random_color() -> Color:
 	return COLORS[randi_range(0, len(COLORS) - 1)] / 2
 
 func _ready() -> void:
+	Settings.reset_bg()
 	sprite.texture = ImageTexture.create_from_image(image)
 
 func _on_mutate_timer_timeout() -> void:
