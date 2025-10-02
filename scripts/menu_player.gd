@@ -1,6 +1,9 @@
 extends CharacterBody2D
 
-signal dash
+@export var input_direction := 0.0
+@export var input_jump: bool = false
+
+#signal dash
 
 enum Ability {
 	NONE,
@@ -10,7 +13,6 @@ enum Ability {
 
 const Checkpoint = preload("res://scripts/checkpoint.gd")
 const FlashManager = preload("res://scripts/flash_manager.gd")
-const Stopwatch = preload("res://scripts/stopwatch.gd")
 
 const SPEED = 110.0
 const DECELERATION = 3000.0
@@ -32,6 +34,8 @@ var dashes := 0
 var air_jumps := 0
 var jumping := false
 var in_danger := false
+var time := 0.0
+var timing := false
 var facing: int:
 	get():
 		return -1 if sprite.flip_h else 1
@@ -51,7 +55,7 @@ var checkpoint: Checkpoint:
 			return
 		value.active = true
 		checkpoint = value
-		value.set_time(self)
+		#value.set_time(self)
 		health = MAX_HEALTH
 		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
 		checkpoint_sound.play()
@@ -84,24 +88,23 @@ var movement: Variant:
 @onready var timer: Label = $GUI/Timer
 @onready var pause_menu: Control = $GUI/PauseMenu
 @onready var camera: Camera2D = $Camera2D
-@onready var stopwatch: Stopwatch = $Stopwatch
 
 func _ready() -> void:
 	health = MAX_HEALTH
 	timer.visible = Settings.show_timer
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
-	Settings.player = self
+	#Settings.player = self
 
 func _on_show_timer_changed(value: bool) -> void:
 	timer.visible = value
 
-func pause() -> void:
-	pause_menu.visible = true
-	get_tree().set_deferred("paused", true)
-	AudioServer.set_bus_effect_enabled(0, 0, true)
+#func pause() -> void:
+	#pause_menu.visible = true
+	#get_tree().set_deferred("paused", true)
+	#AudioServer.set_bus_effect_enabled(0, 0, true)
 
-func fly(delta: float) -> void:
-	position += Input.get_vector("player_left", "player_right", "player_up", "player_down") * FLY_SPEED * delta
+#func fly(delta: float) -> void:
+	#position += Input.get_vector("player_left", "player_right", "player_up", "player_down") * FLY_SPEED * delta
 
 func die(force := false) -> void:
 	set_health((health - 1) >> 1 << 1, force)
@@ -131,27 +134,28 @@ func set_health(value: int, force := false) -> void:
 		0.3
 	)
 
-func get_time() -> String:
-	var time := stopwatch.time
-	var hours := floori(time / 3600)
-	var minutes := floori(time / 60) % 60
-	var seconds := fmod(time, 60)
-	var text := "%d:%05.2f" % [minutes, seconds]
-	if hours:
-		text = str(hours) + ":" + text.pad_zeros(8)
-	return text
+#func get_time() -> String:
+	#var hours := floori(time / 3600)
+	#var minutes := floori(time / 60) % 60
+	#var seconds := fmod(time, 60)
+	#var text := "%d:%05.2f" % [minutes, seconds]
+	#if hours:
+		#text = str(hours) + ":" + text.pad_zeros(8)
+	#return text
 	
-func _process(_delta: float) -> void:
-	timer.text = get_time()
-	if Input.is_action_just_pressed("exit"):
-		pause()
-	if Input.is_action_just_pressed("screenshot") and OS.is_debug_build():
-		await RenderingServer.frame_post_draw
-		var screen := get_viewport().get_texture().get_image()
-		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
-		var path = "user://screenshot_%s.png" % timestamp
-		screen.save_png(path)
-		print("Screenshot saved as ", ProjectSettings.globalize_path(path))
+#func _process(delta: float) -> void:
+	#if timing:
+		#time += delta
+		#timer.text = get_time()
+	#if Input.is_action_just_pressed("exit"):
+		#pause()
+	#if Input.is_action_just_pressed("screenshot") and OS.is_debug_build():
+		#await RenderingServer.frame_post_draw
+		#var screen := get_viewport().get_texture().get_image()
+		#var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
+		#var path = "user://screenshot_%s.png" % timestamp
+		#screen.save_png(path)
+		#print("Screenshot saved as ", ProjectSettings.globalize_path(path))
 
 func jump() -> void:
 	if velocity.y > -JUMP_VELOCITY:
@@ -168,15 +172,15 @@ func _physics_process(delta: float):
 	if flash.flashing and not camera_rect.has_point(global_position):
 		flash.flash()
 		return
-	if Settings.is_playtest:
-		if OS.is_debug_build() and Input.is_action_just_pressed("player_fly"):
-			print(-position.y)
-		if Input.is_action_pressed("player_fly"):
-			fly(delta)
-			health = MAX_HEALTH
-			return
-		elif Input.is_action_just_released("player_fly"):
-			velocity = Vector2.ZERO
+	#if Settings.is_playtest:
+		#if OS.is_debug_build() and Input.is_action_just_pressed("player_fly"):
+			#print(-position.y)
+		#if Input.is_action_pressed("player_fly"):
+			#fly(delta)
+			#health = MAX_HEALTH
+			#return
+		#elif Input.is_action_just_released("player_fly"):
+			#velocity = Vector2.ZERO
 
 	var was_in_danger := in_danger
 	in_danger = len(danger_area.get_overlapping_bodies()) > 0
@@ -190,24 +194,22 @@ func _physics_process(delta: float):
 		ability = Ability.DOUBLE_JUMP
 	elif height < 510:
 		ability = Ability.NONE
-
-	var direction := Input.get_axis("player_left", "player_right")
 	if velocity.y > 0:
 		jumping = false
-	match ability:
-		Ability.NONE:
-			pass
-		Ability.DOUBLE_JUMP:
-			if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
-				air_jumps -= 1
-				jump()
-			if Input.is_action_just_released("player_jump") and jumping:
-				velocity.y *= JUMP_CUTOFF
-		Ability.DASH:
-			if dashes and Input.is_action_just_pressed("player_action"):
-				dashes -= 1
-				movement = Movement.Dash.new(Vector2(facing, 0))
-				dash.emit()
+	#match ability:
+		#Ability.NONE:
+			#pass
+		#Ability.DOUBLE_JUMP:
+			#if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
+				#air_jumps -= 1
+				#jump()
+			#if Input.is_action_just_released("player_jump") and jumping:
+				#velocity.y *= JUMP_CUTOFF
+		#Ability.DASH:
+			#if dashes and Input.is_action_just_pressed("player_action"):
+				#dashes -= 1
+				#movement = Movement.Dash.new(Vector2(facing, 0))
+				#dash.emit()
 	if movement:
 		return
 	
@@ -220,16 +222,17 @@ func _physics_process(delta: float):
 	
 	velocity.y = minf(velocity.y, MAX_FALL_SPEED)
 
-	if position.y > 200 or Input.is_action_just_pressed("player_restart"):
-		die(true)
+	#if position.y > 200 or Input.is_action_just_pressed("player_restart"):
+		#die(true)
 
-	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
+	if input_jump and jump_timer.time_left:
 		jump()
-	if Input.is_action_just_released("player_jump") and jumping:
-		velocity.y *= JUMP_CUTOFF
+	#if Input.is_action_just_released("player_jump") and jumping:
+		#velocity.y *= JUMP_CUTOFF
 	
+	var direction := input_direction
 	if direction:
-		stopwatch.start()
+		timing = true
 		velocity.x = move_toward(velocity.x, direction * SPEED, DECELERATION * delta)
 		sprite.flip_h = direction < 0
 	else:

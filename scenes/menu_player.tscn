@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://0j2bkixf3x0v"]
+
+[ext_resource type="PackedScene" uid="uid://dspm7rpnnutbt" path="res://scenes/player.tscn" id="1_kvvui"]
+[ext_resource type="Script" uid="uid://cqv28qlkseof4" path="res://scripts/menu_player.gd" id="2_01whw"]
+
+[node name="MenuPlayer" instance=ExtResource("1_kvvui")]
+script = ExtResource("2_01whw")
+input_direction = 0.0
+input_jump = false
+
+[node name="Camera2D" parent="." index="1"]
+enabled = false
+
+[node name="Background" parent="." index="3"]
+visible = false
+
+[node name="GUI" parent="." index="4"]
+visible = false
+
+[node name="BackgroundMusic" parent="." index="13"]
+autoplay = false

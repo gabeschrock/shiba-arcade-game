@@ -15,7 +15,7 @@ run/main_scene="uid://dowyv1214ij4e"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 boot_splash/use_filter=false
 boot_splash/image="uid://c2ieh1kd2k1ip"
-config/icon="res://icon.svg"
+config/icon="uid://bswwhgmswhjcp"
 
 [audio]
 

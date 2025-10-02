@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://dowyv1214ij4e"]
+[gd_scene load_steps=6 format=3 uid="uid://dowyv1214ij4e"]
 
 [ext_resource type="Script" uid="uid://6nlp066tjxy6" path="res://scripts/main_menu.gd" id="1_ekxnf"]
 [ext_resource type="Theme" uid="uid://c06vrlubyc4or" path="res://resources/theme.tres" id="1_l6cm7"]
+[ext_resource type="PackedScene" uid="uid://0j2bkixf3x0v" path="res://scenes/menu_player.tscn" id="3_bqqt6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ekxnf"]
+size = Vector2(361, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bqqt6"]
+size = Vector2(20, 69)
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_ekxnf")
@@ -16,6 +23,18 @@ theme_override_font_sizes/font_size = 16
 text = "Untitled Platformer"
 horizontal_alignment = 1
 uppercase = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Label"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Label/StaticBody2D"]
+position = Vector2(161.5, 7)
+shape = SubResource("RectangleShape2D_ekxnf")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Label/StaticBody2D"]
+position = Vector2(352, -20.5)
+shape = SubResource("RectangleShape2D_bqqt6")
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 offset_left = 100.0
@@ -40,6 +59,17 @@ layout_mode = 2
 text = "GitHub"
 flat = true
 
+[node name="QuitButton" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Quit
+"
+flat = true
+
+[node name="MenuPlayer" parent="." instance=ExtResource("3_bqqt6")]
+position = Vector2(-15, 45)
+input_direction = 1.0
+
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Buttons/TimerButton" to="." method="_on_timer_button_pressed"]
 [connection signal="pressed" from="Buttons/GithubButton" to="." method="_on_github_button_pressed"]
+[connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
