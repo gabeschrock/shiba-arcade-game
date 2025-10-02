@@ -289,6 +289,7 @@ process_mode = 3
 stream = ExtResource("11_d2wvv")
 autoplay = true
 
+[connection signal="dash" from="." to="." method="_on_dash"]
 [connection signal="timeout" from="Background/MutateTimer" to="Background" method="_on_mutate_timer_timeout"]
 [connection signal="visibility_changed" from="GUI/PauseMenu" to="GUI/PauseMenu" method="_on_visibility_changed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/ResumeButton" to="GUI/PauseMenu" method="resume"]

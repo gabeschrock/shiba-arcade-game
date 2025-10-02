@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal dash
+
 enum Ability {
 	NONE,
 	DOUBLE_JUMP,
@@ -25,13 +27,15 @@ const NICE_NAMES = {
 	Ability.DASH: "Dash",
 }
 
-var respawn_pos := position
 var dashes := 0
 var air_jumps := 0
 var jumping := false
 var in_danger := false
 var time := 0.0
 var timing := false
+var facing: int:
+	get():
+		return -1 if sprite.flip_h else 1
 var ability := Ability.NONE:
 	set(value):
 		if ability == value:
@@ -65,6 +69,7 @@ var movement: Variant:
 		movement = value
 		if value is Movement:
 			add_child(value)
+@onready var respawn_pos := position
 @onready var jump_timer: Timer = $JumpTimer
 @onready var hearts: TextureRect = $GUI/Hearts
 @onready var shape: CollisionShape2D = $CollisionShape2D
@@ -85,6 +90,7 @@ func _ready() -> void:
 	health = MAX_HEALTH
 	timer.visible = Settings.show_timer
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
+	Settings.player = self
 
 func _on_show_timer_changed(value: bool) -> void:
 	timer.visible = value
@@ -112,6 +118,7 @@ func set_health(value: int, force := false) -> void:
 		if not value & 1:
 			position = respawn_pos
 			velocity = Vector2.ZERO
+		visible = true
 		flash.flash()
 		hurt_sound.play()
 	_health = value
@@ -178,9 +185,9 @@ func _physics_process(delta: float):
 		health -= 1
 
 	var height := -position.y
-	if height > 820:
+	if height > 900:
 		ability = Ability.DASH
-	elif 530 < height and height < 780:
+	elif 530 < height and height < 830:
 		ability = Ability.DOUBLE_JUMP
 	elif height < 510:
 		ability = Ability.NONE
@@ -198,10 +205,10 @@ func _physics_process(delta: float):
 			if Input.is_action_just_released("player_jump") and jumping:
 				velocity.y *= JUMP_CUTOFF
 		Ability.DASH:
-			if dashes and direction and Input.is_action_just_pressed("player_action"):
+			if dashes and Input.is_action_just_pressed("player_action"):
 				dashes -= 1
-				movement = Movement.Dash.new(Vector2(signf(direction), 0))
-				dash_sound.play()
+				movement = Movement.Dash.new(Vector2(facing, 0))
+				dash.emit()
 	if movement:
 		return
 	
@@ -239,3 +246,6 @@ func _physics_process(delta: float):
 	if not is_inside_tree():
 		return
 	move_and_slide()
+
+func _on_dash() -> void:
+	dash_sound.play()

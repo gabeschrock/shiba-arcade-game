@@ -2,6 +2,7 @@ extends Node
 
 const BG_WIDTH = 80
 const BG_HEIGHT = 45
+const Player = preload("res://scripts/player.gd")
 
 signal show_timer_changed(value: bool)
 
@@ -11,6 +12,7 @@ var show_timer := false:
 		show_timer = value
 		show_timer_changed.emit(value)
 var background := Image.create(BG_WIDTH, BG_HEIGHT, false, Image.FORMAT_RGBA4444)
+var player: Player
 
 func _ready() -> void:
 	reset_bg()

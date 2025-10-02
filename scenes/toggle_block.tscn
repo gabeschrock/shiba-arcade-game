@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://djio6webomyqb"]
+
+[ext_resource type="Script" uid="uid://bp5mxoshwmlh3" path="res://scripts/toggle_block.gd" id="1_2x8iv"]
+[ext_resource type="Texture2D" uid="uid://cqps5fjllebly" path="res://assets/tiles.png" id="2_a4rvw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u41u6"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qmld7"]
+atlas = ExtResource("2_a4rvw")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iowp0"]
+atlas = ExtResource("2_a4rvw")
+region = Rect2(0, 64, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3s8dc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qmld7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iowp0")
+}],
+"loop": true,
+"name": &"off",
+"speed": 5.0
+}]
+
+[node name="ToggleBlock" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_2x8iv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_u41u6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_3s8dc")

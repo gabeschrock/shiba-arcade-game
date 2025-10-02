@@ -9,8 +9,7 @@ var hitboxes: Array[Node2D] = []
 @onready var playtest_labels: Node2D = $PlaytestLabels
 
 func _ready() -> void:
-	if Settings.is_playtest:
-		playtest_labels.visible = true
+	playtest_labels.visible = Settings.is_playtest
 
 func _process(_delta: float) -> void:
 	return

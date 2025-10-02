@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://boqm5tqd38i7o"]
+
+[ext_resource type="PackedScene" uid="uid://djio6webomyqb" path="res://scenes/toggle_block.tscn" id="1_ef0r3"]
+
+[node name="ToggleBlock" instance=ExtResource("1_ef0r3")]
+
+[node name="CollisionShape2D" parent="." index="0"]
+disabled = true
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+animation = &"off"
