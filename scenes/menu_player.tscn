@@ -17,5 +17,5 @@ visible = false
 [node name="GUI" parent="." index="4"]
 visible = false
 
-[node name="BackgroundMusic" parent="." index="13"]
+[node name="BackgroundMusic" parent="." index="12"]
 autoplay = false

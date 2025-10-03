@@ -54,3 +54,6 @@ func _on_quit_button_pressed() -> void:
 
 func _on_player_timer_timeout() -> void:
 	player.process_mode = Node.PROCESS_MODE_PAUSABLE
+
+func _on_achievements_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/achievements_menu.tscn")

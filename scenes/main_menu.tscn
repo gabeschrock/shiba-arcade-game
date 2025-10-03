@@ -1,25 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://dowyv1214ij4e"]
+[gd_scene load_steps=6 format=3 uid="uid://dowyv1214ij4e"]
 
 [ext_resource type="Script" uid="uid://6nlp066tjxy6" path="res://scripts/main_menu.gd" id="1_ekxnf"]
 [ext_resource type="Theme" uid="uid://c06vrlubyc4or" path="res://resources/theme.tres" id="1_l6cm7"]
 [ext_resource type="PackedScene" uid="uid://0j2bkixf3x0v" path="res://scenes/menu_player.tscn" id="3_bqqt6"]
+[ext_resource type="Shortcut" uid="uid://c3o7ikjabpote" path="res://resources/exit_shortcut.tres" id="3_wu84c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ekxnf"]
 size = Vector2(576, 28)
-
-[sub_resource type="InputEventAction" id="InputEventAction_bqqt6"]
-action = &"exit"
-
-[sub_resource type="Shortcut" id="Shortcut_wu84c"]
-events = [SubResource("InputEventAction_bqqt6")]
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_ekxnf")
 
 [node name="Label" type="Label" parent="."]
-offset_top = 80.0
+offset_top = 102.0
 offset_right = 640.0
-offset_bottom = 101.0
+offset_bottom = 130.0
 size_flags_horizontal = 4
 theme = ExtResource("1_l6cm7")
 theme_override_font_sizes/font_size = 32
@@ -37,38 +32,47 @@ shape = SubResource("RectangleShape2D_ekxnf")
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 offset_left = 140.0
-offset_top = 140.0
-offset_right = 320.0
-offset_bottom = 212.0
-scale = Vector2(2, 2)
+offset_top = 162.0
+offset_right = 500.0
+offset_bottom = 262.0
 focus_mode = 2
 theme = ExtResource("1_l6cm7")
 
 [node name="PlayButton" type="Button" parent="Buttons"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Play"
 flat = true
 
 [node name="TimerButton" type="Button" parent="Buttons"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Show Timer"
+flat = true
+
+[node name="AchievementsButton" type="Button" parent="Buttons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Achievements"
 flat = true
 
 [node name="GithubButton" type="Button" parent="Buttons"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "GitHub"
 flat = true
 
 [node name="QuitButton" type="Button" parent="Buttons"]
 layout_mode = 2
-shortcut = SubResource("Shortcut_wu84c")
+theme_override_font_sizes/font_size = 16
+shortcut = ExtResource("3_wu84c")
 text = "Quit
 "
 flat = true
 
 [node name="MenuPlayer" parent="." instance=ExtResource("3_bqqt6")]
 process_mode = 4
-position = Vector2(0, -30)
+position = Vector2(0, -8)
 input_direction = 1.0
 
 [node name="PlayerTimer" type="Timer" parent="."]
@@ -77,6 +81,7 @@ autostart = true
 
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Buttons/TimerButton" to="." method="_on_timer_button_pressed"]
+[connection signal="pressed" from="Buttons/AchievementsButton" to="." method="_on_achievements_button_pressed"]
 [connection signal="pressed" from="Buttons/GithubButton" to="." method="_on_github_button_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="timeout" from="PlayerTimer" to="." method="_on_player_timer_timeout"]

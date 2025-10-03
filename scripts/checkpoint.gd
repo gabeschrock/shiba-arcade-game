@@ -7,6 +7,7 @@ var active: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var time: Label = $Time
 @onready var sound: AudioStreamPlayer2D = $Sound
+@onready var map: TileMapLayer = get_parent()
 
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
@@ -30,3 +31,6 @@ func _on_body_entered(body: Player) -> void:
 	var effect := CIRCLE_EFFECT.instantiate()
 	effect.self_modulate = Color.GREEN
 	add_child(effect)
+	var map_pos: Vector2i = map.local_to_map(position)
+	if map_pos == Vector2i(17, -74):
+		Achievements.add("all_for_now")

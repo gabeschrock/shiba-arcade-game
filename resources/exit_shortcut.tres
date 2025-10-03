@@ -1,0 +1,7 @@
+[gd_resource type="Shortcut" load_steps=2 format=3 uid="uid://c3o7ikjabpote"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_bqqt6"]
+action = &"menu_exit"
+
+[resource]
+events = [SubResource("InputEventAction_bqqt6")]
