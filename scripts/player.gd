@@ -12,6 +12,9 @@ const Checkpoint = preload("res://scripts/checkpoint.gd")
 const FlashManager = preload("res://scripts/flash_manager.gd")
 const Stopwatch = preload("res://scripts/stopwatch.gd")
 
+const CIRCLE_EFFECT = preload("res://scenes/circle_effect.tscn")
+const PLATFORM_EFFECT = preload("res://scenes/platform_effect.tscn")
+
 const SPEED = 110.0
 const DECELERATION = 3000.0
 const JUMP_VELOCITY = 200.0
@@ -47,14 +50,9 @@ var ability := Ability.NONE:
 		ability_flash.flash()
 var checkpoint: Checkpoint:
 	set(value):
-		if value.active:
-			return
-		value.active = true
 		checkpoint = value
-		value.set_time(self)
 		health = MAX_HEALTH
 		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
-		checkpoint_sound.play()
 var health: int:
 	get():
 		return _health
@@ -79,12 +77,23 @@ var movement: Variant:
 @onready var danger_area: Area2D = $DangerArea
 @onready var jump_sound: AudioStreamPlayer = $JumpSound
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
-@onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
 @onready var dash_sound: AudioStreamPlayer = $DashSound
 @onready var timer: Label = $GUI/Timer
 @onready var pause_menu: Control = $GUI/PauseMenu
 @onready var camera: Camera2D = $Camera2D
 @onready var stopwatch: Stopwatch = $Stopwatch
+
+func circle_effect(color := Color.WHITE):
+	var effect := CIRCLE_EFFECT.instantiate()
+	effect.self_modulate = color
+	get_parent().add_child(effect)
+	effect.global_position = global_position
+	
+func platform_effect(color := Color.WHITE):
+	var effect := PLATFORM_EFFECT.instantiate()
+	effect.self_modulate = color
+	get_parent().add_child(effect)
+	effect.global_position = $Bottom.global_position
 
 func _ready() -> void:
 	health = MAX_HEALTH
@@ -200,6 +209,7 @@ func _physics_process(delta: float):
 		Ability.DOUBLE_JUMP:
 			if air_jumps and not is_on_floor() and Input.is_action_just_pressed("player_jump"):
 				air_jumps -= 1
+				platform_effect()
 				jump()
 			if Input.is_action_just_released("player_jump") and jumping:
 				velocity.y *= JUMP_CUTOFF
@@ -247,4 +257,5 @@ func _physics_process(delta: float):
 	move_and_slide()
 
 func _on_dash() -> void:
+	circle_effect(Color.RED)
 	dash_sound.play()

@@ -9,4 +9,5 @@ func _on_body_entered(body: Player) -> void:
 	if body.movement:
 		return
 	body.velocity.y = min(-abs(body.velocity.y), -LAUNCH_VELOCITY)
+	body.circle_effect(Color.BLUE)
 	sound.play()

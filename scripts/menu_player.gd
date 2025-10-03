@@ -49,16 +49,15 @@ var ability := Ability.NONE:
 			ability_label.text = "Ability: " + NICE_NAMES[value]
 		ability_label.visible = not is_none
 		ability_flash.flash()
-var checkpoint: Checkpoint:
-	set(value):
-		if value.active:
-			return
-		value.active = true
-		checkpoint = value
-		#value.set_time(self)
-		health = MAX_HEALTH
-		respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
-		checkpoint_sound.play()
+#var checkpoint: Checkpoint:
+	#set(value):
+		#if value.active:
+			#return
+		#value.active = true
+		#checkpoint = value
+		##value.set_time(self)
+		#health = MAX_HEALTH
+		#respawn_pos = get_parent().to_local(checkpoint.sprite.global_position)
 var health: int:
 	get():
 		return _health
@@ -83,7 +82,6 @@ var movement: Variant:
 @onready var danger_area: Area2D = $DangerArea
 @onready var jump_sound: AudioStreamPlayer = $JumpSound
 @onready var hurt_sound: AudioStreamPlayer = $HurtSound
-@onready var checkpoint_sound: AudioStreamPlayer = $CheckpointSound
 @onready var dash_sound: AudioStreamPlayer = $DashSound
 @onready var timer: Label = $GUI/Timer
 @onready var pause_menu: Control = $GUI/PauseMenu
@@ -222,8 +220,9 @@ func _physics_process(delta: float):
 	
 	velocity.y = minf(velocity.y, MAX_FALL_SPEED)
 
-	#if position.y > 200 or Input.is_action_just_pressed("player_restart"):
+	if position.y > 200: #or Input.is_action_just_pressed("player_restart"):
 		#die(true)
+		queue_free()
 
 	if input_jump and jump_timer.time_left:
 		jump()

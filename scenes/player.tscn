@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dspm7rpnnutbt"]
+[gd_scene load_steps=33 format=3 uid="uid://dspm7rpnnutbt"]
 
 [ext_resource type="Script" uid="uid://dco3eaasuxlsr" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Script" uid="uid://bw7un1utfu7fd" path="res://scripts/background.gd" id="2_ur7pv"]
@@ -10,12 +10,17 @@
 [ext_resource type="AudioStream" uid="uid://bqd0p86ryotd6" path="res://assets/jump.wav" id="6_fjrip"]
 [ext_resource type="Texture2D" uid="uid://dimqtyij7vd47" path="res://assets/player.png" id="6_tuyoq"]
 [ext_resource type="AudioStream" uid="uid://dn3se07n8q5s4" path="res://assets/hurt.wav" id="7_fjrip"]
-[ext_resource type="AudioStream" uid="uid://bm14bxg7lpn0o" path="res://assets/checkpoint.wav" id="8_smehm"]
 [ext_resource type="AudioStream" uid="uid://duocwem8k28vh" path="res://assets/background.mp3" id="11_d2wvv"]
 [ext_resource type="PackedScene" uid="uid://f6gryc8dhuy3" path="res://scenes/stopwatch.tscn" id="13_jej6c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g2els"]
 size = Vector2(10, 14)
+
+[sub_resource type="InputEventAction" id="InputEventAction_jej6c"]
+action = &"exit"
+
+[sub_resource type="Shortcut" id="Shortcut_f1ej7"]
+events = [SubResource("InputEventAction_jej6c")]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fjrip"]
 atlas = ExtResource("6_tuyoq")
@@ -161,6 +166,7 @@ position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_g2els")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="JumpTimer" type="Timer" parent="."]
@@ -172,7 +178,7 @@ layer = -1
 script = ExtResource("2_ur7pv")
 
 [node name="Sprite2D" type="Sprite2D" parent="Background"]
-scale = Vector2(4, 4)
+scale = Vector2(8, 8)
 centered = false
 
 [node name="MutateTimer" type="Timer" parent="Background"]
@@ -180,6 +186,8 @@ wait_time = 3.0
 autostart = true
 
 [node name="GUI" type="CanvasLayer" parent="."]
+scale = Vector2(2, 2)
+transform = Transform2D(2, 0, 0, 2, 0, 0)
 
 [node name="Hearts" type="TextureRect" parent="GUI"]
 offset_left = 1.0
@@ -235,6 +243,7 @@ offset_bottom = 116.5
 
 [node name="ResumeButton" type="Button" parent="GUI/PauseMenu/Buttons"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_f1ej7")
 text = "Resume"
 flat = true
 
@@ -278,9 +287,6 @@ volume_db = -8.0
 [node name="HurtSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_fjrip")
 
-[node name="CheckpointSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_smehm")
-
 [node name="DashSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_fjrip")
 pitch_scale = 1.25
@@ -291,6 +297,9 @@ stream = ExtResource("11_d2wvv")
 autoplay = true
 
 [node name="Stopwatch" parent="." instance=ExtResource("13_jej6c")]
+
+[node name="Bottom" type="Node2D" parent="."]
+position = Vector2(0, 7.5)
 
 [connection signal="dash" from="." to="." method="_on_dash"]
 [connection signal="timeout" from="Background/MutateTimer" to="Background" method="_on_mutate_timer_timeout"]

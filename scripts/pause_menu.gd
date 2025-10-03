@@ -9,15 +9,18 @@ func _ready() -> void:
 
 func resume() -> void:
 	visible = false
-	get_tree().set_deferred("paused", false)
+	for i in range(2):
+		await get_tree().physics_frame
+	#get_tree().set_deferred("paused", false)
+	get_tree().paused = false
 	AudioServer.set_bus_effect_enabled(0, 0, false)
 
-func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("exit"):
-		resume()
+#func _process(_delta: float) -> void:
+	#if Input.is_action_just_pressed("exit"):
+		#resume()
 
 func _on_restart_button_pressed() -> void:
-	resume()
+	await resume()
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_show_timer_changed(value: bool) -> void:
@@ -27,7 +30,7 @@ func _on_show_timer_changed(value: bool) -> void:
 		timer_button.text = "Show Timer"
 
 func _on_exit_button_pressed() -> void:
-	resume()
+	await resume()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func _on_timer_button_pressed() -> void:

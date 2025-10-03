@@ -1,9 +1,12 @@
 extends Area2D
 
+const CIRCLE_EFFECT = preload("res://scenes/circle_effect.tscn")
+
 const Player = preload("res://scripts/player.gd")
 var active: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var time: Label = $Time
+@onready var sound: AudioStreamPlayer2D = $Sound
 
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
@@ -19,4 +22,11 @@ func _process(_delta: float) -> void:
 	sprite.play("active" if active else "default")
 
 func _on_body_entered(body: Player) -> void:
+	active = true
+	$CollisionShape2D.set_deferred("disabled", true)
+	sound.play()
+	set_time(body)
 	body.checkpoint = self
+	var effect := CIRCLE_EFFECT.instantiate()
+	effect.self_modulate = Color.GREEN
+	add_child(effect)

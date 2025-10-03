@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://dacy80jjrqc8w"]
+
+[ext_resource type="Script" uid="uid://do0og1foeletg" path="res://scripts/platform_effect.gd" id="1_np055"]
+
+[sub_resource type="Gradient" id="Gradient_twgax"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fjput"]
+gradient = SubResource("Gradient_twgax")
+width = 16
+height = 6
+fill_from = Vector2(1, 0)
+fill_to = Vector2(1, 1)
+
+[node name="PlatformEffect" type="Sprite2D"]
+texture = SubResource("GradientTexture2D_fjput")
+script = ExtResource("1_np055")

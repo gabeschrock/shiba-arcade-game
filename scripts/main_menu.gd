@@ -7,15 +7,26 @@ const MenuPlayer = preload("res://scripts/menu_player.gd")
 @onready var timer_button: Button = $Buttons/TimerButton
 @onready var player: MenuPlayer = $MenuPlayer
 
-var has_jumped := false
+var jumps := 0
 
-func _process(_delta: float) -> void:
-	if player.position.x > 120 and not has_jumped:
+func jump_player():
+	if not is_instance_valid(player):
+		return
+	if player.position.x > 260 and jumps == 0:
 		player.input_jump = true
-		has_jumped = true
+		jumps += 1
 		for i in range(2):
 			await get_tree().physics_frame
 		player.input_jump = false
+	elif player.position.x > 600 and jumps == 1:
+		player.input_jump = true
+		jumps += 1
+		for i in range(2):
+			await get_tree().physics_frame
+		player.input_jump = false
+
+func _process(_delta: float) -> void:
+	jump_player()
 
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
@@ -40,3 +51,6 @@ func _on_github_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+func _on_player_timer_timeout() -> void:
+	player.process_mode = Node.PROCESS_MODE_PAUSABLE
