@@ -4,16 +4,21 @@
 [ext_resource type="Script" uid="uid://ug2akdvilbl7" path="res://scripts/achievement.gd" id="2_rnxx6"]
 
 [node name="Achievement" type="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 offset_right = 30.0
 offset_bottom = 26.0
 theme = ExtResource("1_4cbr5")
 script = ExtResource("2_rnxx6")
 
 [node name="Name" type="Label" parent="."]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
+text = "Name"
+autowrap_mode = 3
 
 [node name="Description" type="Label" parent="."]
-custom_minimum_size = Vector2(30, 10)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+text = "Description"
 autowrap_mode = 3

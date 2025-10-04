@@ -5,24 +5,27 @@ const CIRCLE_EFFECT = preload("res://scenes/circle_effect.tscn")
 const Player = preload("res://scripts/player.gd")
 var active: bool = false
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var time: Label = $Time
+@onready var time_label: Label = $Time
 @onready var sound: AudioStreamPlayer2D = $Sound
-@onready var map: TileMapLayer = get_parent()
+@onready var map_pos: Vector2i = get_parent().local_to_map(position)
 
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
+	Settings.checkpoints[map_pos] = self
 
 func _on_show_timer_changed(value: bool) -> void:
-	time.visible = value
+	time_label.visible = value
 
 func set_time(player: Player) -> void:
-	time.text = player.get_time()
-	time.visible = Settings.show_timer
+	time_label.text = player.get_time()
+	time_label.visible = Settings.show_timer
 
 func _process(_delta: float) -> void:
 	sprite.play("active" if active else "default")
 
 func _on_body_entered(body: Player) -> void:
+	if OS.is_debug_build():
+		print("Checkpoint at ", map_pos)
 	active = true
 	$CollisionShape2D.set_deferred("disabled", true)
 	sound.play()
@@ -31,6 +34,14 @@ func _on_body_entered(body: Player) -> void:
 	var effect := CIRCLE_EFFECT.instantiate()
 	effect.self_modulate = Color.GREEN
 	add_child(effect)
-	var map_pos: Vector2i = map.local_to_map(position)
+	if map_pos.y < -36 and not Settings.checkpoints[Vector2i(-16, -36)].active:
+		Achievements.add("time_saver")
 	if map_pos == Vector2i(17, -74):
 		Achievements.add("all_for_now")
+		var time := body.stopwatch.time
+		if time < 60 * 2:
+			Achievements.add("speedy")
+			if time < 60 + 30:
+				Achievements.add("super_speedy")
+				if time < 60:
+					Achievements.add("wait_thats_possible")

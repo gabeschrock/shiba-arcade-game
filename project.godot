@@ -23,9 +23,9 @@ buses/default_bus_layout="uid://csssj6nlx8o8"
 
 [autoload]
 
-Movement="*res://scripts/movement.gd"
-Settings="*res://scripts/settings.gd"
-Achievements="*res://scripts/achievements.gd"
+Movement="*res://scripts/globals/movement.gd"
+Settings="*res://scripts/globals/settings.gd"
+Achievements="*res://scripts/globals/achievements.gd"
 
 [display]
 

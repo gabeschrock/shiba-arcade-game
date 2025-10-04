@@ -2,20 +2,26 @@ extends VBoxContainer
 
 var is_toast_ready := false
 signal toast_ready
+signal toast_done
+
+var info: Achievements.Info
 
 @export var id: String
+@export var show_secret := false:
+	set(value):
+		if not is_node_ready():
+			await ready
+		show_secret = value
+		var secret := info.secret and not show_secret
+		$Name.text = "Secret Achievement" if secret else info.name
+		$Description.text = "Shhhh!" if secret else info.description
 
 func _ready() -> void:
-	var info: Array
-	if id in Achievements.INFO:
-		info = Achievements.INFO[id]
+	if id in Achievements.info:
+		info = Achievements.info[id]
 	else:
-		info = ["Unknown Achievement", "Unknown Achievement"]
-	$Name.text = info[0]
-	$Description.text = info[1]
-	#print(size, " ", get_minimum_size())
-	#size = get_minimum_size()
-	#print(size)
+		info = Achievements.Info.new("Unknown Achievement", "Unknown Achievement")
+	show_secret = show_secret
 	set_deferred("is_toast_ready", true)
 	toast_ready.emit.call_deferred()
 
@@ -31,3 +37,4 @@ func toast() -> void:
 	tween.tween_property(self, "modulate:a", 0, 0.5)
 	await tween.finished
 	queue_free()
+	toast_done.emit()

@@ -8,7 +8,8 @@ var time: float:
 	get():
 		if not started:
 			return 0.0
-		return (Time.get_ticks_usec() - start_time - pause_time) / 1_000_000.0
+		var mult := Engine.time_scale if OS.is_debug_build() else 1.0
+		return (Time.get_ticks_usec() - start_time - pause_time) * mult / 1_000_000.0
 
 func start():
 	if not started:

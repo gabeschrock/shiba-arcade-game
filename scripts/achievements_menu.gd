@@ -5,11 +5,12 @@ const ACHIEVEMENT = preload("res://scenes/achievement.tscn")
 
 func _ready() -> void:
 	$ExitButton.grab_focus()
-	for id in Achievements.INFO.keys():
+	for id in Achievements.info:
 		var achievement := ACHIEVEMENT.instantiate()
 		achievement.id = id
-		if not Achievements.has(id):
-			print("No achievement")
+		if Achievements.has(id):
+			achievement.show_secret = true
+		else:
 			achievement.modulate.a = 0.3
 		container.add_child(achievement)
 

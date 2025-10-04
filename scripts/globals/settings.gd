@@ -13,8 +13,10 @@ var show_timer := false:
 		show_timer_changed.emit(value)
 var background := Image.create(BG_WIDTH, BG_HEIGHT, false, Image.FORMAT_RGBA4444)
 var player: Player
+var checkpoints := {}
 
 func _ready() -> void:
+	#Engine.time_scale = 0.5
 	reset_bg()
 
 func reset_bg() -> void:

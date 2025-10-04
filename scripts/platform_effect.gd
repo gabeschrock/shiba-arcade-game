@@ -4,10 +4,10 @@ extends Sprite2D
 @export var speed := 0.1
 
 func _ready() -> void:
-	scale.y = 0
+	scale = Vector2(0.5, 0)
 	await get_tree().process_frame
 	var tween := get_tree().create_tween()
-	tween.tween_property(self, "scale:y", 1, speed)
+	tween.tween_property(self, "scale", Vector2.ONE, speed)
 	tween.parallel().tween_property(self, "position:y", position.y + 4, speed)
 	await tween.finished
 	tween = get_tree().create_tween()

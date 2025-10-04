@@ -161,7 +161,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5vg67"]
-size = Vector2(12, 24)
+size = Vector2(7, 20)
 
 [node name="Checkpoint" type="Area2D"]
 collision_layer = 0
@@ -173,7 +173,7 @@ sprite_frames = SubResource("SpriteFrames_jjwhk")
 animation = &"active"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -4)
+position = Vector2(-3.5, -2)
 shape = SubResource("RectangleShape2D_5vg67")
 
 [node name="Time" type="Label" parent="."]

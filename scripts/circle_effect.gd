@@ -6,7 +6,7 @@ extends Sprite2D
 func _ready() -> void:
 	scale = Vector2.ZERO
 	var tween := get_tree().create_tween()
-	tween.tween_property(self, "scale", Vector2(1, 1), speed)
+	tween.tween_property(self, "scale", Vector2.ONE, speed)
 	await tween.finished
 	tween = get_tree().create_tween()
 	var new_color := self_modulate
