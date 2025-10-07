@@ -13,7 +13,6 @@ func resume() -> void:
 		await get_tree().physics_frame
 	#get_tree().set_deferred("paused", false)
 	get_tree().paused = false
-	AudioServer.set_bus_effect_enabled(0, 0, false)
 
 #func _process(_delta: float) -> void:
 	#if Input.is_action_just_pressed("exit"):

@@ -1,0 +1,40 @@
+[gd_resource type="TileSet" load_steps=10 format=3 uid="uid://d37mir6shn8ic"]
+
+[ext_resource type="Texture2D" uid="uid://cqps5fjllebly" path="res://assets/tiles.png" id="1_xa57a"]
+[ext_resource type="PackedScene" uid="uid://5rhu84tstjai" path="res://scenes/jump_pad.tscn" id="2_5clyk"]
+[ext_resource type="PackedScene" uid="uid://0ovcvulve6nx" path="res://scenes/checkpoint.tscn" id="3_uy2xl"]
+[ext_resource type="PackedScene" uid="uid://cfvhkcjaygb33" path="res://scenes/crumbling_tile.tscn" id="4_gykgb"]
+[ext_resource type="PackedScene" uid="uid://djio6webomyqb" path="res://scenes/toggle_block.tscn" id="5_k4bki"]
+[ext_resource type="PackedScene" uid="uid://boqm5tqd38i7o" path="res://scenes/toggle_block_off.tscn" id="6_8yfd8"]
+[ext_resource type="PackedScene" uid="uid://0mvodtmtkwyp" path="res://scenes/block_toggle.tscn" id="7_hbdr2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
+texture = ExtResource("1_xa57a")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:2/0 = 0
+0:2/0/physics_layer_1/polygon_0/points = PackedVector2Array(8, 8, 0, 0, -8, 8)
+1:2/0 = 0
+1:2/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, 8, -3.5, 3, 0, 6, 3.5, 3, 8, 8)
+0:3/0 = 0
+0:3/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, 8, 0, -8, 8, 8)
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_tbgi4"]
+scenes/1/scene = ExtResource("2_5clyk")
+scenes/2/scene = ExtResource("3_uy2xl")
+scenes/3/scene = ExtResource("4_gykgb")
+scenes/4/scene = ExtResource("5_k4bki")
+scenes/5/scene = ExtResource("6_8yfd8")
+scenes/6/scene = ExtResource("7_hbdr2")
+
+[resource]
+physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 0
+physics_layer_1/collision_layer = 4
+physics_layer_1/collision_mask = 0
+sources/0 = SubResource("TileSetAtlasSource_jyhfs")
+sources/1 = SubResource("TileSetScenesCollectionSource_tbgi4")

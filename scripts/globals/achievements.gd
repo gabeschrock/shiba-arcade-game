@@ -14,13 +14,13 @@ class Info extends RefCounted:
 		secret = p_secret
 
 var info := {
-	"all_for_now": Info.new("All For Now", "Reach the fourth checkpoint"),
-	"speedy": Info.new("Speedy", "Reach the fourth checkpoint in under 2 minutes"),
-	"super_speedy": Info.new("Super Speedy", "Reach the fourth checkpoint in under 1:30"),
+	"the_end": Info.new("The End...", "Reach the fifth checkpoint"),
+	"speedy": Info.new("Speedy", "Reach the fifth checkpoint in under 3 minutes"),
+	"super_speedy": Info.new("Super Speedy", "Reach the fifth checkpoint in under 2 minutes"),
 	"time_saver": Info.new("Time Saver", "Skip the second checkpoint"),
 	"wait_thats_possible": Info.new(
 		"Wait, That's Possible?",
-		"Reach the fourth checkpoint in under 1 minute",
+		"Reach the fourth checkpoint in under 1:30",
 		true
 	)
 }
@@ -39,12 +39,13 @@ func load_achievements():
 	var content := file.get_as_text()
 	file.close()
 	achieved = JSON.parse_string(content)
-	#var json := JSON.new()
-	#var err = json.parse(content)
-	#if err == OK:
-		#achieved = json.data
-	#else:
-		#push_error(err)
+	var save := false
+	for id in achieved:
+		if id not in info:
+			save = true
+			achieved.erase(id)
+	if save:
+		save_achievements()
 
 func save_achievements():
 	if OS.is_debug_build():
@@ -56,8 +57,8 @@ func save_achievements():
 func has(id: String) -> bool:
 	return id in achieved
 
-func add(id: String) -> void:
-	if has(id):
+func add(id: String, min_difficulty := Settings.Difficulty.NORMAL) -> void:
+	if has(id) or Settings.difficulty < min_difficulty:
 		return
 	achieved[id] = null
 	save_achievements()

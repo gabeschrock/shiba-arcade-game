@@ -35,7 +35,7 @@ func _ready() -> void:
 	play_button.grab_focus.call_deferred()
 
 func _on_play_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/difficulty_menu.tscn")
 
 func _on_timer_button_pressed() -> void:
 	Settings.show_timer = not Settings.show_timer

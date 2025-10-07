@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://b85626bjqgcg6"]
+
+[ext_resource type="Theme" uid="uid://c06vrlubyc4or" path="res://resources/theme.tres" id="1_uu84u"]
+[ext_resource type="Script" uid="uid://woc4ce3c0f4j" path="res://scripts/difficulty_menu.gd" id="2_bvmav"]
+
+[node name="DifficultyMenu" type="VBoxContainer"]
+offset_left = 137.0
+offset_top = 74.0
+offset_right = 503.0
+offset_bottom = 286.0
+focus_mode = 2
+theme = ExtResource("1_uu84u")
+script = ExtResource("2_bvmav")
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Select Difficulty"
+
+[node name="InvincibleButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 100, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Invincible"
+flat = true
+
+[node name="UnlimitedButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.666667, 1, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Unlimited"
+flat = true
+
+[node name="NormalButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(100, 100, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Normal"
+flat = true
+
+[node name="NoHealButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "No-Heal"
+flat = true
+
+[node name="CheckpointlessButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Checkpointless"
+flat = true
+
+[node name="ImpossibleButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Impossible"
+flat = true
+
+[node name="CancelButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Cancel"
+flat = true
+
+[connection signal="pressed" from="InvincibleButton" to="." method="_on_button_pressed" binds= [0]]
+[connection signal="pressed" from="UnlimitedButton" to="." method="_on_button_pressed" binds= [1]]
+[connection signal="pressed" from="NormalButton" to="." method="_on_button_pressed" binds= [2]]
+[connection signal="pressed" from="NoHealButton" to="." method="_on_button_pressed" binds= [3]]
+[connection signal="pressed" from="CheckpointlessButton" to="." method="_on_button_pressed" binds= [4]]
+[connection signal="pressed" from="ImpossibleButton" to="." method="_on_button_pressed" binds= [4]]
+[connection signal="pressed" from="CancelButton" to="." method="_on_cancel_button_pressed"]
