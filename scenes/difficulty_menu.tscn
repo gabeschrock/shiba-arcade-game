@@ -71,5 +71,5 @@ flat = true
 [connection signal="pressed" from="NormalButton" to="." method="_on_button_pressed" binds= [2]]
 [connection signal="pressed" from="NoHealButton" to="." method="_on_button_pressed" binds= [3]]
 [connection signal="pressed" from="CheckpointlessButton" to="." method="_on_button_pressed" binds= [4]]
-[connection signal="pressed" from="ImpossibleButton" to="." method="_on_button_pressed" binds= [4]]
+[connection signal="pressed" from="ImpossibleButton" to="." method="_on_button_pressed" binds= [5]]
 [connection signal="pressed" from="CancelButton" to="." method="_on_cancel_button_pressed"]

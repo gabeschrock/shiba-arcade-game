@@ -10,7 +10,7 @@ var active: bool = false
 @onready var map_pos: Vector2i = get_parent().local_to_map(position)
 
 func _ready() -> void:
-	if not Settings.has_checkpoints():
+	if not (Settings.has_checkpoints() or map_pos == Vector2i(-1, -97)):
 		queue_free()
 		return
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
@@ -37,7 +37,9 @@ func _on_body_entered(body: Player) -> void:
 	var effect := CIRCLE_EFFECT.instantiate()
 	effect.self_modulate = Color.GREEN
 	add_child(effect)
-	if map_pos.y < -36 and not Settings.checkpoints[Vector2i(-16, -36)].active:
+	if map_pos.y < -36 and \
+			Settings.has_checkpoints() and \
+			Settings.checkpoints[Vector2i(-16, -36)].active:
 		Achievements.add("time_saver")
 	if map_pos == Vector2i(-1, -97):
 		Achievements.add("the_end")
