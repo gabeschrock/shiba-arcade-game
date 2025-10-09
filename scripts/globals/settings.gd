@@ -42,7 +42,7 @@ func has_double_damage() -> bool:
 	return difficulty == Difficulty.IMPOSSIBLE
 
 func _ready() -> void:
-	Engine.time_scale = 0.5
+	#Engine.time_scale = 0.5
 	reset_bg()
 
 func reset_bg() -> void:
