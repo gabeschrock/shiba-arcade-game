@@ -163,7 +163,7 @@ func get_time() -> String:
 	var seconds := fmod(time, 60)
 	var text := "%d:%05.2f" % [minutes, seconds]
 	if hours:
-		text = str(hours) + ":" + text.pad_zeros(8)
+		text = str(hours) + ":" + text.pad_zeros(5)
 	return text
 	
 func _process(_delta: float) -> void:
@@ -227,7 +227,9 @@ func _physics_process(delta: float):
 		health -= 2 if Settings.has_double_damage() else 1
 
 	var height := -position.y
-	if height > 1300:
+	if height > 1670:
+		ability = Ability.NONE
+	elif 1300 < height and height < 1740:
 		ability = Ability.DOUBLE_JUMP_DASH
 	elif 900 < height and height < 1260:
 		ability = Ability.DASH
@@ -236,6 +238,11 @@ func _physics_process(delta: float):
 	elif height < 510:
 		ability = Ability.NONE
 
+	var has_jumped := false
+	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
+		jump()
+		has_jumped = true
+
 	var direction := Input.get_axis("player_left", "player_right")
 	if velocity.y > 0:
 		jumping = false
@@ -243,7 +250,8 @@ func _physics_process(delta: float):
 		Ability.NONE:
 			pass
 		Ability.DOUBLE_JUMP:
-			handle_double_jump()
+			if not has_jumped:
+				handle_double_jump()
 		Ability.DASH:
 			handle_dash()
 		Ability.DOUBLE_JUMP_DASH:
@@ -264,8 +272,6 @@ func _physics_process(delta: float):
 	if position.y > 200 or Input.is_action_just_pressed("player_restart"):
 		die(true)
 
-	if Input.is_action_pressed("player_jump") and jump_timer.time_left:
-		jump()
 	if Input.is_action_just_released("player_jump") and jumping:
 		velocity.y *= JUMP_CUTOFF
 	

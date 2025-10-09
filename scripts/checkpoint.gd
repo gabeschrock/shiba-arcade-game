@@ -41,8 +41,10 @@ func _on_body_entered(body: Player) -> void:
 			Settings.has_checkpoints() and \
 			Settings.checkpoints[Vector2i(-16, -36)].active:
 		Achievements.add("time_saver")
-	if map_pos == Vector2i(-1, -97):
+	if map_pos == Vector2i(-11, -121):
 		Achievements.add("the_end")
+		if Settings.difficulty == Settings.Difficulty.IMPOSSIBLE:
+			Achievements.add("pro_gamer")
 		var time := body.stopwatch.time
 		if time < 60 * 3:
 			Achievements.add("speedy")

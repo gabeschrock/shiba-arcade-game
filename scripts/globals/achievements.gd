@@ -22,6 +22,10 @@ var info := {
 		"Wait, That's Possible?",
 		"Reach the fourth checkpoint in under 1:30",
 		true
+	),
+	"pro_gamer": Info.new(
+		"Pro Gamer",
+		"Reach the fourth checkpoint on impossible difficulty"
 	)
 }
 const PATH = "user://achievements.json"
