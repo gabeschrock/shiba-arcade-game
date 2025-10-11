@@ -2,6 +2,7 @@ extends Node
 
 const Achievement = preload("res://scripts/achievement.gd")
 const ACHIEVEMENT = preload("res://scenes/achievement.tscn")
+const VERSION := 1
 
 class Info extends RefCounted:
 	var name: String
@@ -15,8 +16,8 @@ class Info extends RefCounted:
 
 var info := {
 	"the_end": Info.new("The End...", "Reach the fifth checkpoint"),
-	"speedy": Info.new("Speedy", "Reach the fifth checkpoint in under 3 minutes"),
-	"super_speedy": Info.new("Super Speedy", "Reach the fifth checkpoint in under 2 minutes"),
+	"speedy": Info.new("Speedy", "Reach the fifth checkpoint in under 3:30"),
+	"super_speedy": Info.new("Super Speedy", "Reach the fifth checkpoint in under 2:30"),
 	"time_saver": Info.new("Time Saver", "Skip the second checkpoint"),
 	"wait_thats_possible": Info.new(
 		"Wait, That's Possible?",
@@ -25,7 +26,7 @@ var info := {
 	),
 	"pro_gamer": Info.new(
 		"Pro Gamer",
-		"Reach the fourth checkpoint on impossible difficulty"
+		"Reach the fifth checkpoint on impossible difficulty"
 	)
 }
 const PATH = "user://achievements.json"
@@ -42,14 +43,29 @@ func load_achievements():
 	var file := FileAccess.open(PATH, FileAccess.READ)
 	var content := file.get_as_text()
 	file.close()
-	achieved = JSON.parse_string(content)
+	var data: Dictionary = JSON.parse_string(content)
+	var version: int = data.get("version", 0)
 	var save := false
+	while version < VERSION:
+		save = true
+		data = update(data, version)
+		version += 1
+	data["version"] = version
 	for id in achieved:
 		if id not in info:
 			save = true
 			achieved.erase(id)
+	achieved = data
 	if save:
 		save_achievements()
+
+func update(data: Dictionary, version: int) -> Dictionary:
+	match version:
+		0:
+			pass
+		_:
+			push_error("Invalid version to update from: ", version)
+	return data
 
 func save_achievements():
 	if OS.is_debug_build():

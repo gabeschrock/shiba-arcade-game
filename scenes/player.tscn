@@ -256,6 +256,12 @@ theme_override_font_sizes/font_size = 16
 text = "Restart"
 flat = true
 
+[node name="OptionsButton" type="Button" parent="GUI/PauseMenu/Buttons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Options"
+flat = true
+
 [node name="ExitButton" type="Button" parent="GUI/PauseMenu/Buttons"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
@@ -289,17 +295,21 @@ target = NodePath("../GUI/AbilityLabel")
 [node name="JumpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_fjrip")
 volume_db = -8.0
+bus = &"SFX"
 
 [node name="HurtSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_fjrip")
+bus = &"SFX"
 
 [node name="DashSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_fjrip")
 pitch_scale = 1.25
+bus = &"SFX"
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_d2wvv")
 autoplay = true
+bus = &"Music"
 
 [node name="Stopwatch" parent="." instance=ExtResource("13_jej6c")]
 
@@ -311,5 +321,6 @@ position = Vector2(0, 7.5)
 [connection signal="visibility_changed" from="GUI/PauseMenu" to="GUI/PauseMenu" method="_on_visibility_changed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/ResumeButton" to="GUI/PauseMenu" method="resume"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/RestartButton" to="GUI/PauseMenu" method="_on_restart_button_pressed"]
+[connection signal="pressed" from="GUI/PauseMenu/Buttons/OptionsButton" to="GUI/PauseMenu" method="_on_options_button_pressed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/ExitButton" to="GUI/PauseMenu" method="_on_exit_button_pressed"]
 [connection signal="pressed" from="GUI/PauseMenu/Buttons/TimerButton" to="GUI/PauseMenu" method="_on_timer_button_pressed"]

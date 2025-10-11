@@ -139,6 +139,7 @@ func set_health(value: int, force := false) -> void:
 		if not value & 1:
 			position = respawn_pos
 			velocity = Vector2.ZERO
+			movement = null
 			if Settings.is_life_unlimited():
 				value = MAX_HEALTH
 		visible = true
@@ -227,7 +228,7 @@ func _physics_process(delta: float):
 		health -= 2 if Settings.has_double_damage() else 1
 
 	var height := -position.y
-	if height > 1670:
+	if height > 1750:
 		ability = Ability.NONE
 	elif 1300 < height and height < 1740:
 		ability = Ability.DOUBLE_JUMP_DASH

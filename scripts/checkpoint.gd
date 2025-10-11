@@ -10,7 +10,7 @@ var active: bool = false
 @onready var map_pos: Vector2i = get_parent().local_to_map(position)
 
 func _ready() -> void:
-	if not (Settings.has_checkpoints() or map_pos == Vector2i(-1, -97)):
+	if not (Settings.has_checkpoints() or map_pos == Vector2i(-11, -121)):
 		queue_free()
 		return
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
@@ -39,16 +39,16 @@ func _on_body_entered(body: Player) -> void:
 	add_child(effect)
 	if map_pos.y < -36 and \
 			Settings.has_checkpoints() and \
-			Settings.checkpoints[Vector2i(-16, -36)].active:
+			not Settings.checkpoints[Vector2i(-16, -36)].active:
 		Achievements.add("time_saver")
 	if map_pos == Vector2i(-11, -121):
 		Achievements.add("the_end")
 		if Settings.difficulty == Settings.Difficulty.IMPOSSIBLE:
 			Achievements.add("pro_gamer")
-		var time := body.stopwatch.time
-		if time < 60 * 3:
+		var mins := body.stopwatch.time / 60
+		if mins < 3.5:
 			Achievements.add("speedy")
-			if time < 60 * 2:
+			if mins < 2.5:
 				Achievements.add("super_speedy")
-				if time < 60 + 30:
+				if mins < 1.5:
 					Achievements.add("wait_thats_possible")

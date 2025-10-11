@@ -183,12 +183,14 @@ one_shot = true
 stream = ExtResource("3_xjd7f")
 volume_db = -10.0
 pitch_scale = 0.5
+bus = &"SFX"
 
 [node name="RespawnSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_4anwj")
 volume_db = -10.0
 pitch_scale = 0.5
 attenuation = 20.0
+bus = &"SFX"
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_sprite_animation_finished"]
 [connection signal="animation_looped" from="AnimatedSprite2D" to="." method="_on_sprite_animation_looped"]

@@ -17,6 +17,10 @@ boot_splash/use_filter=false
 boot_splash/image="uid://c2ieh1kd2k1ip"
 config/icon="uid://bswwhgmswhjcp"
 
+[audio]
+
+buses/default_bus_layout="uid://clnotd7jubj13"
+
 [autoload]
 
 Movement="*res://scripts/globals/movement.gd"

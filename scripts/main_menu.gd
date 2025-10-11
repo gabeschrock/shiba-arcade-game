@@ -57,3 +57,6 @@ func _on_player_timer_timeout() -> void:
 
 func _on_achievements_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/achievements_menu.tscn")
+
+func _on_options_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/options_menu.tscn")

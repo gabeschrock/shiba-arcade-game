@@ -1,5 +1,7 @@
 extends Control
 
+const OPTIONS_MENU = preload("res://scenes/options_menu.tscn")
+
 @onready var resume_button: Button = $Buttons/ResumeButton
 @onready var timer_button: Button = $Buttons/TimerButton
 
@@ -11,12 +13,7 @@ func resume() -> void:
 	visible = false
 	for i in range(2):
 		await get_tree().physics_frame
-	#get_tree().set_deferred("paused", false)
 	get_tree().paused = false
-
-#func _process(_delta: float) -> void:
-	#if Input.is_action_just_pressed("exit"):
-		#resume()
 
 func _on_restart_button_pressed() -> void:
 	await resume()
@@ -38,3 +35,8 @@ func _on_timer_button_pressed() -> void:
 func _on_visibility_changed() -> void:
 	if visible:
 		resume_button.grab_focus.call_deferred()
+
+func _on_options_button_pressed() -> void:
+	var menu := OPTIONS_MENU.instantiate()
+	menu.target = self
+	get_parent().add_child(menu)

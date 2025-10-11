@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cujn4pvgq4m6i" path="res://scripts/moving_platform.gd" id="1_sqppf"]
 [ext_resource type="Texture2D" uid="uid://cqps5fjllebly" path="res://assets/tiles.png" id="2_1tdcd"]
+[ext_resource type="TileSet" uid="uid://d37mir6shn8ic" path="res://resources/tiles.tres" id="2_mb26n"]
 
 [sub_resource type="Curve2D" id="Curve2D_mtoee"]
 _data = {
@@ -9,15 +10,11 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mb26n"]
-atlas = ExtResource("2_1tdcd")
-region = Rect2(0, 16, 16, 16)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_1tdcd"]
 atlas = ExtResource("2_1tdcd")
 region = Rect2(16, 64, 16, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_afg43"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mb26n"]
 size = Vector2(48, 16)
 
 [node name="MovingPlatform" type="Path2D"]
@@ -32,29 +29,25 @@ loop = false
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="PathFollow2D"]
 remote_path = NodePath("../../AnimatableBody2D")
 
+[node name="ReverseTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="AnimatableBody2D" type="AnimatableBody2D" parent="."]
+show_behind_parent = true
 collision_layer = 2
 collision_mask = 0
 
-[node name="Block" type="Sprite2D" parent="AnimatableBody2D"]
-position = Vector2(-16, 0)
-texture = SubResource("AtlasTexture_mb26n")
-
-[node name="Block2" type="Sprite2D" parent="AnimatableBody2D"]
-texture = SubResource("AtlasTexture_mb26n")
-
-[node name="Block3" type="Sprite2D" parent="AnimatableBody2D"]
-position = Vector2(16, 0)
-texture = SubResource("AtlasTexture_mb26n")
+[node name="TileMapLayer" type="TileMapLayer" parent="AnimatableBody2D"]
+position = Vector2(-8, -8)
+tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+tile_set = ExtResource("2_mb26n")
+collision_enabled = false
 
 [node name="DashIndicator" type="Sprite2D" parent="AnimatableBody2D"]
 visible = false
 texture = SubResource("AtlasTexture_1tdcd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D"]
-shape = SubResource("RectangleShape2D_afg43")
-
-[node name="ReverseTimer" type="Timer" parent="."]
-one_shot = true
+shape = SubResource("RectangleShape2D_mb26n")
 
 [connection signal="timeout" from="ReverseTimer" to="." method="reverse"]
