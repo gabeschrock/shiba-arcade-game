@@ -37,6 +37,7 @@ var dashes := 0
 var air_jumps := 0
 var jumping := false
 var in_danger := false
+var dying := false
 var facing: int:
 	get():
 		return -1 if sprite.flip_h else 1
@@ -110,10 +111,6 @@ func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
 	Settings.player = self
 
-func _draw() -> void:
-	if not get_parent().visible:
-		print("not visible")
-
 func _on_show_timer_changed(value: bool) -> void:
 	timer.visible = value
 
@@ -128,11 +125,16 @@ func die(force := false) -> void:
 	set_health((health - 1) >> 1 << 1, force)
 
 func set_health(value: int, force := false) -> void:
-	if _health == value:
+	if _health == value or dying:
 		return
 	if value < _health and flash.flashing and not force:
 		return
 	if value <= 0 and not Settings.is_invincible():
+		dying = true
+		shape.disabled = true
+		hurt_sound.play()
+		flash.flash()
+		await get_tree().create_timer(0.5).timeout
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 		return
 	if value < _health:
@@ -207,6 +209,8 @@ func handle_dash():
 		dash.emit()
 
 func _physics_process(delta: float):
+	if dying:
+		return
 	var camera_rect := camera.get_viewport_rect()
 	camera_rect.position = camera.get_screen_center_position() - camera_rect.size / 2
 	if flash.flashing and not camera_rect.has_point(global_position):

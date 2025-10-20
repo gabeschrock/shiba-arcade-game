@@ -9,6 +9,9 @@ const MenuPlayer = preload("res://scripts/menu_player.gd")
 
 var jumps := 0
 
+func click():
+	Settings.click_sound.play()
+
 func jump_player():
 	if not is_instance_valid(player):
 		return

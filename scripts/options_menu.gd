@@ -17,6 +17,7 @@ func _on_music_value_changed(value: float) -> void:
 	Settings.volume_music = value
 
 func _on_exit_button_pressed() -> void:
+	Settings.click_sound.play()
 	if get_parent() == get_window():
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 	else:

@@ -86,9 +86,15 @@ one_shot = true
 autostart = true
 
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Buttons/PlayButton" to="." method="click"]
 [connection signal="pressed" from="Buttons/TimerButton" to="." method="_on_timer_button_pressed"]
+[connection signal="pressed" from="Buttons/TimerButton" to="." method="click"]
 [connection signal="pressed" from="Buttons/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="Buttons/OptionsButton" to="." method="click"]
 [connection signal="pressed" from="Buttons/AchievementsButton" to="." method="_on_achievements_button_pressed"]
+[connection signal="pressed" from="Buttons/AchievementsButton" to="." method="click"]
 [connection signal="pressed" from="Buttons/GithubButton" to="." method="_on_github_button_pressed"]
+[connection signal="pressed" from="Buttons/GithubButton" to="." method="click"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Buttons/QuitButton" to="." method="click"]
 [connection signal="timeout" from="PlayerTimer" to="." method="_on_player_timer_timeout"]

@@ -1,5 +1,8 @@
 extends VBoxContainer
 
+func click():
+	Settings.click_sound.play()
+
 func _ready() -> void:
 	$NormalButton.grab_focus()
 	const OVERRIDES := [
@@ -16,8 +19,10 @@ func _ready() -> void:
 			button.add_theme_color_override(override, font_color)
 
 func _on_button_pressed(difficulty: Settings.Difficulty):
+	click()
 	Settings.difficulty = difficulty
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_cancel_button_pressed() -> void:
+	click()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

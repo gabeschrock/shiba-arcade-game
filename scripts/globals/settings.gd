@@ -35,7 +35,8 @@ var volume_music := 1.0:
 		volume_music = value
 		AudioServer.set_bus_volume_linear(2, value)
 		save_settings()
-@export var difficulty := Difficulty.IMPOSSIBLE
+var difficulty := Difficulty.IMPOSSIBLE
+var click_sound := AudioStreamPlayer.new()
 
 func is_invincible() -> bool:
 	return difficulty == Difficulty.INVINCIBLE
@@ -57,6 +58,8 @@ func _ready() -> void:
 	#Engine.time_scale = 0.5
 	reset_bg()
 	load_settings()
+	click_sound.stream = preload("res://assets/click.wav")
+	add_child(click_sound)
 
 func reset_bg() -> void:
 	background.fill(Color.BLACK)

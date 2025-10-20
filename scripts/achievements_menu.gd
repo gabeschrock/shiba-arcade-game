@@ -15,4 +15,5 @@ func _ready() -> void:
 		container.add_child(achievement)
 
 func _on_exit_button_pressed() -> void:
+	Settings.click_sound.play()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

@@ -5,6 +5,9 @@ const OPTIONS_MENU = preload("res://scenes/options_menu.tscn")
 @onready var resume_button: Button = $Buttons/ResumeButton
 @onready var timer_button: Button = $Buttons/TimerButton
 
+func click():
+	Settings.click_sound.play()
+
 func _ready() -> void:
 	Settings.show_timer_changed.connect(_on_show_timer_changed)
 	_on_show_timer_changed(Settings.show_timer)

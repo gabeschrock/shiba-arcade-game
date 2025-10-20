@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Untitled Platformer"
 run/main_scene="uid://dowyv1214ij4e"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/use_filter=false
 boot_splash/image="uid://c2ieh1kd2k1ip"
 config/icon="uid://bswwhgmswhjcp"
@@ -31,7 +31,6 @@ Achievements="*res://scripts/globals/achievements.gd"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/mode=4
 window/stretch/mode="canvas_items"
 
 [editor]
